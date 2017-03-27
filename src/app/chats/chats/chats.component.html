@@ -1,0 +1,9 @@
+<md-nav-list>
+  <md-list-item *ngFor="let chat of chats" [routerLink]="['/messages', chat.id]">
+    <img md-list-avatar src="http://api.adorable.io/avatars/joe" alt="avatar">
+    <h3 md-line> {{chat.members[0]?.name}} </h3>
+    <p md-line>
+      <span> {{chat.messages[0]?.content}} </span>
+    </p>
+  </md-list-item>
+</md-nav-list>

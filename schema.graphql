@@ -1,0 +1,19 @@
+type Message {
+  id: ID!
+  author: Member! @relation(name: "MessageAuthor")
+  chat: Chat @relation(name: "MessageChat")
+  content: String!
+}
+
+type Chat {
+  id: ID!
+  members: [Member!]! @relation(name: "ChatMembers")
+  messages: [Message] @relation(name: "MessageChat")
+}
+ 
+type Member {
+  id: ID!
+  name: String!
+  messages: [Message!] @relation(name: "MessageAuthor")
+  chats: [Chat!] @relation(name: "ChatMembers")
+}

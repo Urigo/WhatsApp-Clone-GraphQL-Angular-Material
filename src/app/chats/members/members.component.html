@@ -1,0 +1,6 @@
+<md-nav-list>
+  <md-list-item *ngFor="let member of members | async" (click)="chatWith(member)">
+    <img md-list-avatar src="http://api.adorable.io/avatars/joe" alt="avatar">
+    <h3 md-line> {{member.name}} </h3>
+  </md-list-item>
+</md-nav-list>
