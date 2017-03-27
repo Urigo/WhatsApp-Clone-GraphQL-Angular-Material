@@ -3,9 +3,9 @@ import gql from 'graphql-tag';
 import {
   Chat,
   Message,
-  messageInfoFragment,
-  chatInfoFragment,
-  memberInfoFragment,
+  chatsMessageInfoFragment,
+  chatsChatInfoFragment,
+  chatsMemberInfoFragment,
 } from '../chats/chats.models';
 
 // Queries
@@ -20,14 +20,14 @@ export const AllChatsQuery = gql`
       members(filter: {
         id_not: $member
       }) {
-        ...MemberInfo
+        ...ChatsMemberInfo
       }
-      ...ChatInfo
+      ...ChatsChatInfo
     }
   }
 
-  ${chatInfoFragment}
-  ${memberInfoFragment}
+  ${chatsChatInfoFragment}
+  ${chatsMemberInfoFragment}
 `;
 export interface AllChatsQueryResult {
   allChats: Chat[];
@@ -39,12 +39,12 @@ export const NewChatSubscription = gql`
   subscription getNewChat {
     Chat(filter: { mutation_in: CREATED }) {
       node {
-        ...ChatInfo
+        ...ChatsChatInfo
       }
     }
   }
 
-  ${chatInfoFragment}
+  ${chatsChatInfoFragment}
 `;
 
 export const NewChatMessageSubscription = gql`
@@ -56,7 +56,7 @@ export const NewChatMessageSubscription = gql`
       ]
     }) {
       node {
-        ...MessageInfo
+        ...ChatsMessageInfo
         chat {
           id
         }
@@ -64,5 +64,5 @@ export const NewChatMessageSubscription = gql`
     }
   }
 
-  ${messageInfoFragment}
+  ${chatsMessageInfoFragment}
 `;

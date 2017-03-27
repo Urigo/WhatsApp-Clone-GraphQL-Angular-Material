@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-import { Message, messageInfoFragment } from '../messages/messages.models';
+import { Message, messagesMessageInfoFragment } from '../messages/messages.models';
 
 // Fragmnets
 
@@ -8,8 +8,8 @@ export interface Member {
   id: string;
   name: string;
 }
-export const memberInfoFragment = gql`
-  fragment MemberInfo on Member {
+export const messagesPageMemberInfoFragment = gql`
+  fragment MessagesPageMemberInfo on Member {
     id
     name
   }
@@ -23,12 +23,12 @@ export const ChatMembersQuery = gql`
       members(filter: {
         id_not: $member
       }) {
-        ...MemberInfo
+        ...MessagesPageMemberInfo
       }
     }
   }
 
-  ${memberInfoFragment}
+  ${messagesPageMemberInfoFragment}
 `;
 export interface ChatMembersQueryResult {
   Chat: {
@@ -43,11 +43,11 @@ export const ChatMessagesQuery = gql`
         id: $chat
       }
     }) {
-      ...MessageInfo
+      ...MessagesMessageInfo
     }
   }
 
-  ${messageInfoFragment}
+  ${messagesMessageInfoFragment}
 `;
 export interface ChatMessagesQueryResult {
   allMessages: Message[];
@@ -58,11 +58,11 @@ export interface ChatMessagesQueryResult {
 export const CreateMessageMutation = gql`
   mutation createMessage($author: ID!, $chat: ID!, $content: String!) {
     createMessage(authorId: $author, chatId: $chat, content: $content) {
-      ...MessageInfo
+      ...MessagesMessageInfo
     }
   }
 
-  ${messageInfoFragment}
+  ${messagesMessageInfoFragment}
 `;
 
 export interface CreateMessageMutationResult {
@@ -94,10 +94,10 @@ export const NewMessageSubscription = gql`
       ]
     }) {
       node {
-        ...MessageInfo
+        ...MessagesMessageInfo
       }
     }
   }
 
-  ${messageInfoFragment}
+  ${messagesMessageInfoFragment}
 `;

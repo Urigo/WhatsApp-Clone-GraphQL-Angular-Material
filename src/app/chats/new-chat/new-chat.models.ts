@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 import {
-  memberInfoFragment,
+  messagesPageMemberInfoFragment,
   Member,
 } from '../../messages/messages-page/messages-page.models';
 
@@ -35,12 +35,12 @@ export const CreateChatMutation = gql`
       members(filter: {
         id_not: $author
       }) {
-        ...MemberInfo
+        ...MessagesPageMemberInfo
       }
     }
   }
 
-  ${memberInfoFragment}
+  ${messagesPageMemberInfoFragment}
 `;
 
 export interface Chat {

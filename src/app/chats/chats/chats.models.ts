@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 
 // Fragments
 
-export const messageInfoFragment = gql`
-  fragment MessageInfo on Message {
+export const chatsMessageInfoFragment = gql`
+  fragment ChatsMessageInfo on Message {
     content
     author {
       id
@@ -17,8 +17,8 @@ export interface Message {
   };
 }
 
-export const memberInfoFragment = gql`
-  fragment MemberInfo on Member {
+export const chatsMemberInfoFragment = gql`
+  fragment ChatsMemberInfo on Member {
     id
     name
   }
@@ -29,15 +29,15 @@ export interface Member {
 }
 
 
-export const chatInfoFragment = gql`
-  fragment ChatInfo on Chat {
+export const chatsChatInfoFragment = gql`
+  fragment ChatsChatInfo on Chat {
     id
     messages(last: 1) {
-      ...MessageInfo
+      ...ChatsMessageInfo
     }
   }
 
-  ${messageInfoFragment}
+  ${chatsMessageInfoFragment}
 `;
 export interface Chat {
   id: string;

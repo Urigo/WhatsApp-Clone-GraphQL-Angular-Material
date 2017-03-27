@@ -12,7 +12,7 @@ import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../shared/auth.service';
 import { NavigationService } from '../../shared/navigation.service';
-import { messageInfoFragment } from '../chats/chats.models';
+import { chatsMessageInfoFragment } from '../chats/chats.models';
 import {
   AllChatsQueryResult,
   AllChatsQuery,
@@ -60,7 +60,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       .map(result => result.data.allChats)
       .do((chats) => {
         // emit new set of ids
-        const ids = chats.map(({id}) => id);
+        const ids = chats.map((chat) => chat.id);
         this.chatIds.next(ids);
       });
 
@@ -68,6 +68,11 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     this.newChatSub = this.apollo.subscribe({
       query: NewChatSubscription
     }).subscribe((data) => {
+      // XXX graph.cool sends an empty node when someone deletes a chat...
+      if (!data.Chat.node) {
+        return;
+      }
+
       this.chats.updateQuery((prev) => {
         let action = '$unshift';
 
@@ -103,7 +108,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
               if (chatId === c.id) {
                 return update(c, {
                   messages: {
-                    $set: [filter(messageInfoFragment, data.Message.node)],
+                    $set: [filter(chatsMessageInfoFragment, data.Message.node)],
                   },
                 });
               }

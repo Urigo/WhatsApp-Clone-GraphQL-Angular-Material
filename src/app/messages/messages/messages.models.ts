@@ -7,8 +7,8 @@ export interface Message {
   content: string;
 }
 
-export const messageInfoFragment = gql`
-  fragment MessageInfo on Message {
+export const messagesMessageInfoFragment = gql`
+  fragment MessagesMessageInfo on Message {
     id
     content
   }
