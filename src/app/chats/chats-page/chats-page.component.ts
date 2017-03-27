@@ -6,90 +6,19 @@ import { Subject } from 'rxjs/Subject';
 import { filter } from 'graphql-anywhere';
 
 import * as update from 'immutability-helper';
-import gql from 'graphql-tag';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../shared/auth.service';
 import { NavigationService } from '../../shared/navigation.service';
-import { Chat, Message } from '../chats/chats.component';
-
-export const messageInfoFragment = gql`
-  fragment MessageInfo on Message {
-    content
-    author {
-      id
-    }
-  }
-`;
-
-export const chatInfoFragment = gql`
-  fragment ChatInfo on Chat {
-    id
-    messages(last: 1) {
-      ...MessageInfo
-    }
-  }
-
-  ${messageInfoFragment}
-`;
-
-export const AllChatsQuery = gql`
-  query getAllChats($member: ID!) {
-    allChats(filter: {
-      members_some: {
-        id: $member
-      }
-    }) {
-      members(filter: {
-        id_not: $member
-      }) {
-        id
-        name
-      }
-      ...ChatInfo
-    }
-  }
-
-  ${chatInfoFragment}
-`;
-
-export const NewChatSubscription = gql`
-  subscription getNewChat {
-    Chat(filter: { mutation_in: CREATED }) {
-      node {
-        ...ChatInfo
-      }
-    }
-  }
-
-  ${chatInfoFragment}
-`;
-
-export const NewChatMessageSubscription = gql`
-  subscription getNewChatMessage($chats: [ID!]!) {
-    Message(filter: {
-      AND: [
-        { mutation_in: CREATED },
-        { node: { chat: { id_in: $chats } } }
-      ]
-    }) {
-      node {
-        ...MessageInfo
-        chat {
-          id
-        }
-      }
-    }
-  }
-
-  ${messageInfoFragment}
-`;
-
-export interface AllChatsQueryResult {
-  allChats: Chat[];
-}
+import { messageInfoFragment } from '../chats/chats.models';
+import {
+  AllChatsQueryResult,
+  AllChatsQuery,
+  NewChatSubscription,
+  NewChatMessageSubscription,
+} from './chats-page.models';
 
 @Component({
   selector: 'app-chats-page',

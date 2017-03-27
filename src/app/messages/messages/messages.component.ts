@@ -1,9 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-export interface Message {
-  id: string;
-  content: string;
-}
+import { Message } from './messages.models';
 
 @Component({
   selector: 'app-messages',

@@ -1,14 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-export interface Message {
-  content: string;
-}
-export interface Chat {
-  id: string;
-  name: string;
-  members: any[];
-  messages: Message[];
-}
+import { Chat } from './chats.models';
 
 @Component({
   selector: 'app-chats',

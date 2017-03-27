@@ -4,97 +4,22 @@ import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
 
 import * as update from 'immutability-helper';
-import gql from 'graphql-tag';
 
 import 'rxjs/add/operator/map';
 
 import { AuthService } from '../../shared/auth.service';
 import { NavigationService } from '../../shared/navigation.service';
-
-export const ChatMembersQuery = gql`
-  query getChatMembers($chat: ID!, $member: ID!) {
-    Chat(id: $chat) {
-      members(filter: {
-        id_not: $member
-      }) {
-        id
-        name
-      }
-    }
-  }
-`;
-export interface ChatMembersQueryResult {
-  Chat: {
-    members: {
-      id: string;
-      name: string;
-    }[];
-  };
-}
-
-export const ChatMessagesQuery = gql`
-  query getChatMessages($chat: ID!) {
-    allMessages(filter: {
-      chat: {
-        id: $chat
-      }
-    }) {
-      id
-      content
-    }
-  }
-`;
-export interface ChatMessagesQueryResult {
-  allMessages: Message[];
-}
-
-export const CreateMessageMutation = gql`
-  mutation createMessage($author: ID!, $chat: ID!, $content: String!) {
-    createMessage(authorId: $author, chatId: $chat, content: $content) {
-      id
-      content
-    }
-  }
-`;
-
-export const DeleteChatMutation = gql`
-  mutation deleteChat($chat: ID!) {
-    deleteChat(id: $chat) {
-      id
-    }
-  }
-`;
-
-export const NewMessageSubscription = gql`
-  subscription getNewMessage($chat: ID!) {
-    Message(filter: {
-      AND: [
-        { mutation_in: CREATED },
-        {
-          node: {
-            chat: {
-              id: $chat
-            }
-          }
-        }
-      ]
-    }) {
-      node {
-        id
-        content
-      }
-    }
-  }
-`;
-
-export interface CreateMessageMutationResult {
-  createMessage: Message;
-}
-
-export interface Message {
-  id: string;
-  content: string;
-}
+import { Message } from '../messages/messages.models';
+import {
+  ChatMembersQuery,
+  ChatMembersQueryResult,
+  ChatMessagesQuery,
+  ChatMessagesQueryResult,
+  NewMessageSubscription,
+  CreateMessageMutation,
+  CreateMessageMutationResult,
+  DeleteChatMutation,
+} from './messages-page.models';
 
 @Component({
   selector: 'app-messages-page',

@@ -3,55 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Apollo } from 'apollo-angular';
 
-import gql from 'graphql-tag';
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from '../../shared/auth.service';
 import { NavigationService } from '../../shared/navigation.service';
-import { Message } from '../../messages/messages/messages.component';
-import { Chat } from '../chats/chats.component';
-import { chatInfoFragment, AllChatsQuery } from '../chats-page/chats-page.component';
-
-export const MemberQuery = gql`
-  query getMember($member: ID!) {
-    Member(id: $member) {
-      name
-    }
-  }
-`;
-export interface MemberQueryResult {
-  Member: {
-    name: string;
-  };
-}
-
-export const CreateChatMutation = gql`
-  mutation createChat($members: [ID!]!, $author: ID!, $message: String!) {
-    createChat(
-      membersIds: $members, 
-      messages: [{
-        content: $message,
-        authorId: $author
-      }]
-    ){
-      members(filter: {
-        id_not: $author
-      }) {
-        id
-        name
-      }
-      ...ChatInfo
-    }
-  }
-
-  ${chatInfoFragment}
-`;
-
-export interface CreateChatMutationResult {
-  createChat: Chat;
-}
+import { Message } from '../../messages/messages/messages.models';
+import {
+  MemberQuery,
+  MemberQueryResult,
+  CreateChatMutation,
+  CreateChatMutationResult,
+} from './new-chat.models';
 
 @Component({
   selector: 'app-new-chat',
