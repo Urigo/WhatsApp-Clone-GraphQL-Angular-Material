@@ -5,7 +5,7 @@ import { Apollo } from 'apollo-angular';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { AuthService } from '../../shared/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { MembersQueryResult, MembersQuery, Member } from './members.models';
 

@@ -8,9 +8,8 @@ import { ApolloModule } from 'apollo-angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ChatsModule } from './chats/chats.module';
+import { AuthModule } from './auth/auth.module';
 import { provideClient } from './apollo';
-import { AuthService } from './shared/auth.service';
 import { NavigationService } from './navigation/navigation.service';
 import { NavigationComponent } from './navigation/navigation.component';
 
@@ -24,10 +23,10 @@ import { NavigationComponent } from './navigation/navigation.component';
     FormsModule,
     MaterialModule,
     ApolloModule.withClient(provideClient),
-    AppRoutingModule
+    AppRoutingModule,
+    AuthModule,
   ],
   providers: [
-    AuthService,
     NavigationService,
   ],
   bootstrap: [AppComponent]

@@ -10,7 +10,7 @@ import * as update from 'immutability-helper';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
-import { AuthService } from '../../shared/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { chatsMessageInfoFragment } from '../chats/chats.models';
 import {

@@ -1,0 +1,5 @@
+<md-list>
+  <md-list-item *ngFor="let member of members | async" (click)="pick(member)">
+    {{member.name}}
+  </md-list-item>
+</md-list>

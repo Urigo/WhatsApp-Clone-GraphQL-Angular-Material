@@ -7,7 +7,7 @@ import * as update from 'immutability-helper';
 
 import 'rxjs/add/operator/map';
 
-import { AuthService } from '../../shared/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { Message } from '../messages/messages.models';
 import {
@@ -117,7 +117,7 @@ export class MessagesPageComponent implements OnInit, OnDestroy {
         content: message,
       },
       updateQueries: {
-        getChatMessages: (prev, {mutationResult}: any) => this.pushMessage(prev, mutationResult.data.createMessage)
+        getChatMessages: (prev: ChatMessagesQueryResult, {mutationResult}: any) => this.pushMessage(prev, mutationResult.data.createMessage)
       },
     });
   }

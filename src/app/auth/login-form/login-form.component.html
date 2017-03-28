@@ -1,0 +1,13 @@
+<form [formGroup]="loginForm" (submit)="submit()">
+  <md-input-container>
+    <input mdInput type="text" placeholder="Username" formControlName="username">
+  </md-input-container>
+  
+  <md-input-container>
+    <input mdInput type="password" placeholder="password" formControlName="password">
+  </md-input-container>
+
+  <button md-button type="submit">Log in</button>
+</form>
+
+<app-member-pick (onPick)="onPick($event)"></app-member-pick>
