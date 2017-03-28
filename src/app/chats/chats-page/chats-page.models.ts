@@ -12,11 +12,14 @@ import {
 
 export const AllChatsQuery = gql`
   query getAllChats($member: ID!) {
-    allChats(filter: {
-      members_some: {
-        id: $member
-      }
-    }) {
+    allChats(
+      filter: {
+        members_some: {
+          id: $member
+        }
+      },
+      orderBy: createdAt_DESC
+    ) {
       members(filter: {
         id_not: $member
       }) {
@@ -36,8 +39,50 @@ export interface AllChatsQueryResult {
 // Subscriptions
 
 export const NewChatSubscription = gql`
-  subscription getNewChat {
-    Chat(filter: { mutation_in: CREATED }) {
+  subscription getNewChat($member: ID!) {
+    Chat(
+      filter: {
+        AND: [{
+          mutation_in: CREATED
+        }, {
+          node: {
+            members_some: {
+              id: $member
+            }
+          }
+        }]
+      }
+    ) {
+      node {
+        members(filter: {
+          id_not: $member
+        }) {
+          ...ChatsMemberInfo
+        }
+        ...ChatsChatInfo
+      }
+    }
+  }
+
+  ${chatsChatInfoFragment}
+  ${chatsMemberInfoFragment}
+`;
+
+export const DeletedChatSubscription = gql`
+  subscription getDeletedChat($member: ID!) {
+    Chat(
+      filter: {
+        AND: [{
+          mutation_in: DELETED
+        }, {
+          node: {
+            members_some: {
+              id: $member
+            }
+          }
+        }]
+      }
+    ) {
       node {
         ...ChatsChatInfo
       }

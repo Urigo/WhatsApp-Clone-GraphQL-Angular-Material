@@ -8,7 +8,7 @@ import * as update from 'immutability-helper';
 import 'rxjs/add/operator/map';
 
 import { AuthService } from '../../shared/auth.service';
-import { NavigationService } from '../../shared/navigation.service';
+import { NavigationService } from '../../navigation/navigation.service';
 import { Message } from '../messages/messages.models';
 import {
   ChatMembersQuery,

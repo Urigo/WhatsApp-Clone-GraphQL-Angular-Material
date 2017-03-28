@@ -11,13 +11,14 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../shared/auth.service';
-import { NavigationService } from '../../shared/navigation.service';
+import { NavigationService } from '../../navigation/navigation.service';
 import { chatsMessageInfoFragment } from '../chats/chats.models';
 import {
   AllChatsQueryResult,
   AllChatsQuery,
   NewChatSubscription,
   NewChatMessageSubscription,
+  DeletedChatSubscription,
 } from './chats-page.models';
 
 @Component({
@@ -30,6 +31,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   chatIds = new Subject<String[]>();
   chatIdsSub: Subscription;
   newChatSub: Subscription;
+  deletedChatSub: Subscription;
   newChatMessageSub: Subscription;
   onActionSub: Subscription;
 
@@ -41,6 +43,8 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    const memberId = this.auth.getUser().id;
+
     // set navigation bar
     this.navigation.reset();
     this.navigation.setTitle('whatsapp');
@@ -53,7 +57,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     this.chats = this.apollo.watchQuery<AllChatsQueryResult>({
       query: AllChatsQuery,
       variables: {
-        member: this.auth.getUser().id,
+        member: memberId,
       },
       fetchPolicy: 'network-only',
     })
@@ -66,7 +70,10 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
 
     // new Chat
     this.newChatSub = this.apollo.subscribe({
-      query: NewChatSubscription
+      query: NewChatSubscription,
+      variables: {
+        member: memberId,
+      }
     }).subscribe((data) => {
       // XXX graph.cool sends an empty node when someone deletes a chat...
       if (!data.Chat.node) {
@@ -82,6 +89,33 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
 
         return update(prev, {
           allChats: { [action]: [data.Chat.node] }
+        });
+      });
+    });
+
+    // deleted Chat
+    // XXX Fix it, no results
+    this.deletedChatSub = this.apollo.subscribe({
+      query: DeletedChatSubscription,
+      variables: {
+        member: memberId,
+      }
+    }).subscribe((data) => {
+      console.log('deleted', data);
+      // XXX graph.cool sends an empty node
+      if (!data.Chat.node) {
+        return;
+      }
+
+      this.chats.updateQuery((prev) => {
+        if (!prev.allChats || prev.allChats.length === 0) {
+          return prev;
+        }
+
+        const allChats = prev.allChats.filter((c) => data.Chat.node.id !== c.id);
+
+        return update(prev, {
+          allChats: { $set: allChats }
         });
       });
     });
@@ -129,6 +163,11 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     if (this.newChatSub) {
       this.newChatSub.unsubscribe();
       this.newChatSub = undefined;
+    }
+
+    if (this.deletedChatSub) {
+      this.deletedChatSub.unsubscribe();
+      this.deletedChatSub = undefined;
     }
 
     if (this.newChatMessageSub) {

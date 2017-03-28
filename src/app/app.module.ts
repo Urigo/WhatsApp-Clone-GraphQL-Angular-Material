@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ChatsModule } from './chats/chats.module';
 import { provideClient } from './apollo';
 import { AuthService } from './shared/auth.service';
-import { NavigationService } from './shared/navigation.service';
+import { NavigationService } from './navigation/navigation.service';
 import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({

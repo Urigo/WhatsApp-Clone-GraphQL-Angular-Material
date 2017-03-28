@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from '../../shared/auth.service';
-import { NavigationService } from '../../shared/navigation.service';
+import { NavigationService } from '../../navigation/navigation.service';
 import { MembersQueryResult, MembersQuery, Member } from './members.models';
 
 @Component({

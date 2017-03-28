@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { NavigationService } from '../shared/navigation.service';
+import { NavigationService } from './navigation.service';
 
 @Component({
   selector: 'app-navigation',
