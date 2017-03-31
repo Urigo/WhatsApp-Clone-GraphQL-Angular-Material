@@ -8,7 +8,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
-import { Message } from '../../messages/messages/messages.models';
+import { Message } from '../../messages/message/message.models';
 import {
   MemberQuery,
   MemberQueryResult,

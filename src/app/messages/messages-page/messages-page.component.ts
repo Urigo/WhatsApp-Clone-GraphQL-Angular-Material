@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 
 import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
-import { Message } from '../messages/messages.models';
+import { Message } from '../message/message.models';
 import {
   ChatMembersQuery,
   ChatMembersQueryResult,
@@ -29,6 +29,7 @@ import {
 export class MessagesPageComponent implements OnInit, OnDestroy {
   messages: any;
   members: any[] = [];
+  member: string;
   chat: string;
   newMessageSub: Subscription;
   chatSub: Subscription;
@@ -48,6 +49,8 @@ export class MessagesPageComponent implements OnInit, OnDestroy {
     this.navigation.setBack(['/chats']);
     this.navigation.setAction('delete');
 
+    this.member = this.auth.getUser().id;
+
     this.navActionSub = this.navigation.onAction().subscribe(() => {
       this.deleteChat();
     });
@@ -65,7 +68,7 @@ export class MessagesPageComponent implements OnInit, OnDestroy {
         query: ChatMembersQuery,
         variables: {
           chat: chatId,
-          member: this.auth.getUser().id,
+          member: this.member,
         },
       })
         .subscribe(({data}) => {
@@ -112,7 +115,7 @@ export class MessagesPageComponent implements OnInit, OnDestroy {
     this.apollo.mutate<CreateMessageMutationResult>({
       mutation: CreateMessageMutation,
       variables: {
-        author: this.auth.getUser().id,
+        author: this.member,
         chat: this.chat,
         content: message,
       },

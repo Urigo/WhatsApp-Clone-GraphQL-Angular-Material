@@ -1,7 +1,20 @@
-<form (ngSubmit)="submit()">
-  <md-input-container>
-    <textarea mdInput placeholder="Message" name="message" [(ngModel)]="message"></textarea>
-  </md-input-container>
+<form [formGroup]="messageForm" fxLayout="row" fxLayoutAlign="space-between stretch">
+  <div class="input" fxFlex="90">
+    <div class="wrapper">
+      <md-input-container [floatPlaceholder]="'never'" fxFill>
+        <textarea mdInput
+          placeholder="Type a message" 
+          name="message"
+          formControlName="message"
+          (keyup.enter)="submit()">
+        </textarea>
+      </md-input-container>
+    </div>
+  </div>
 
-  <input type="submit" md-button value="Submit"/>
+  <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+    <button md-fab type="submit">
+      <md-icon color="primary">send</md-icon>
+    </button>
+  </div>
 </form>

@@ -1,2 +1,4 @@
-<app-messages [messages]="messages | async"></app-messages>
-<app-new-message (onMessage)="onMessage($event)"></app-new-message>
+<div class="bg" fxLayout="column" fxLayoutAlign="space-between stretch">
+  <app-messages [messages]="messages | async" [member]="member" fxFlex="90"></app-messages>
+  <app-new-message (onMessage)="onMessage($event)" fxFlex></app-new-message>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthService } from './auth.service';
@@ -16,6 +17,7 @@ import { MemberPickComponent } from './member-pick/member-pick.component';
     RouterModule,
     ReactiveFormsModule,
     MaterialModule,
+    FlexLayoutModule,
   ],
   declarations: [LoginPageComponent, LoginFormComponent, MemberPickComponent],
   providers: [AuthService, AuthGuardService]

@@ -20,7 +20,7 @@ export class LoginPageComponent implements OnInit {
 
   ngOnInit() {
     this.navigation.reset();
-    this.navigation.setTitle('Login');
+    // this.navigation.hide();
   }
 
   onSubmit(member: Member) {

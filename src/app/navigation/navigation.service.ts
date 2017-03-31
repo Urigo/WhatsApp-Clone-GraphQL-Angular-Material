@@ -9,6 +9,7 @@ export interface Navigation {
   title: string;
   back: Route;
   action: Action;
+  visible: boolean;
 }
 
 @Injectable()
@@ -19,6 +20,7 @@ export class NavigationService {
     title: 'whatsapp',
     back: false,
     action: false,
+    visible: true,
   };
   private current: Navigation;
   private timeoutId: NodeJS.Timer;
@@ -30,6 +32,14 @@ export class NavigationService {
   reset(): void {
     this.current = Object.assign({}, this.defaults);
     this.emit();
+  }
+
+  hide(): void {
+    this.update<boolean>('visible', false);
+  }
+
+  show(): void {
+    this.update<boolean>('visible', true);
   }
 
   setTitle(title: string): void {

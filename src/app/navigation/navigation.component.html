@@ -1,4 +1,4 @@
-<md-toolbar color="primary">
+<md-toolbar color="primary" *ngIf="visible">
   <md-icon *ngIf="back" class="left-icon link" [routerLink]="back">arrow_back</md-icon>
   <span>{{title}}</span>
   <span class="spacer"></span>

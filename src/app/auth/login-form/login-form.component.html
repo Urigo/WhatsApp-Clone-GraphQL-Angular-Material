@@ -1,6 +1,6 @@
-<form [formGroup]="loginForm" (submit)="submit()">
+<form [formGroup]="loginForm" (submit)="submit()" fxLayout="column" fxLayoutAlign="center center">
   <md-input-container>
-    <input mdInput type="text" placeholder="Username" formControlName="username">
+    <input mdInput type="text" placeholder="username" formControlName="username">
   </md-input-container>
   
   <md-input-container>

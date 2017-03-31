@@ -12,6 +12,7 @@ export class NavigationComponent implements OnInit {
   title: string;
   back: any;
   action: any;
+  visible: boolean;
   navigationSub: Subscription;
 
   constructor(
@@ -23,6 +24,7 @@ export class NavigationComponent implements OnInit {
       this.title = data.title;
       this.back = data.back;
       this.action = data.action;
+      this.visible = data.visible;
     });
   }
 

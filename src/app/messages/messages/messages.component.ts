@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Message } from './messages.models';
+import { Message } from '../message/message.models';
 
 @Component({
   selector: 'app-messages',
@@ -9,4 +9,5 @@ import { Message } from './messages.models';
 })
 export class MessagesComponent {
   @Input() messages: Message[];
+  @Input() member: string;
 }
