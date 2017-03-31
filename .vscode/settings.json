@@ -4,10 +4,6 @@
     "**/.svn": true,
     "**/.hg": true,
     "**/.DS_Store": true,
-    "**/node_modules": true,
-
-    "src/app/auth/": false,
-    "src/app/chats/": false,
-    "src/app/navigation/": false
+    "**/node_modules": true
   }
 }
