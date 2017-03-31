@@ -1,0 +1,15 @@
+@import '../../shared/toolbar';
+
+.container {
+  padding: 5px;
+  background: #fff url(/assets/chat-background.jpg);
+}
+
+.user-pic {
+  height: 40px;
+  width: 40px;
+  margin: 5px;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+}
+

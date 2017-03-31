@@ -1,0 +1,26 @@
+subscription getNewChat($member: ID!) {
+  Chat(
+    filter: {
+      AND: [{
+        mutation_in: CREATED
+      }, {
+        node: {
+          members_some: {
+            id: $member
+          }
+        }
+      }]
+    }
+  ) {
+    node {
+      id
+      date: createdAt
+      members(filter: {
+        id_not: $member
+      }) {
+        id
+        name
+      }
+    }
+  }
+}

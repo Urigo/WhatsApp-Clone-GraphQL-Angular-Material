@@ -1,19 +1,26 @@
-type Message {
+type Chat {
+  createdAt: DateTime!
   id: ID!
-  author: Member! @relation(name: "MessageAuthor")
-  chat: Chat @relation(name: "MessageChat")
-  content: String!
+  members: [Member!]! @relation(name: "ChatOnMember")
+  messages: [Message!]! @relation(name: "ChatOnMessage")
+  updatedAt: DateTime!
 }
 
-type Chat {
+type Message {
+  author: Member @relation(name: "MessageOnMember")
+  chat: Chat @relation(name: "ChatOnMessage")
+  content: String!
+  createdAt: DateTime!
   id: ID!
-  members: [Member!]! @relation(name: "ChatMembers")
-  messages: [Message] @relation(name: "MessageChat")
+  updatedAt: DateTime!
 }
- 
+
 type Member {
+  chats: [Chat!]! @relation(name: "ChatOnMember")
+  createdAt: DateTime!
   id: ID!
+  messages: [Message!]! @relation(name: "MessageOnMember")
   name: String!
-  messages: [Message!] @relation(name: "MessageAuthor")
-  chats: [Chat!] @relation(name: "ChatMembers")
+  title: String
+  updatedAt: DateTime!
 }

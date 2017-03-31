@@ -1,0 +1,9 @@
+<form [formGroup]="messageForm" (submit)="submit()" fxLayout="row" fxLayoutAlign="space-between stretch">
+  <md-input-container [floatPlaceholder]="'never'" fxFill>
+    <input mdInput
+      placeholder="Type a message" 
+      name="message"
+      formControlName="message"
+      (keyup.enter)="submit()"/>
+  </md-input-container>
+</form>

@@ -1,0 +1,21 @@
+mutation createNewChat($members: [ID!]!, $author: ID!) {
+  createChat(
+    membersIds: $members
+  ){
+    id
+    date: createdAt
+    messages(last: 1) {
+      content
+      author {
+        id
+        name
+      }
+    }
+    members(filter: {
+      id_not: $author
+    }) {
+      id
+      name
+    }
+  }
+}

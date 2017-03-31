@@ -1,25 +1,24 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Apollo } from 'apollo-angular';
+import { Apollo, ApolloQueryObservable } from 'apollo-angular';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { filter } from 'graphql-anywhere';
+// import { filter } from 'graphql-anywhere';
 
 import * as update from 'immutability-helper';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
+import { Inputs, Outputs, Chat } from '../chat-list/chat-list.component';
 import { AuthService } from '../../auth/auth.service';
-import { NavigationService } from '../../navigation/navigation.service';
-import { chatsMessageInfoFragment } from '../chats/chats.models';
-import {
-  AllChatsQueryResult,
-  AllChatsQuery,
-  NewChatSubscription,
-  NewChatMessageSubscription,
-  DeletedChatSubscription,
-} from './chats-page.models';
+// import { GetAllChatsQuery } from '../../graphql-schema';
+
+const allChatsQuery = require('graphql-tag/loader!./get-all-chats.graphql');
+const getNewChatSubscription = require('graphql-tag/loader!./get-new-chat.graphql');
+const getNewChatMessageSubscription = require('graphql-tag/loader!./get-new-chat-message.graphql');
+const getDeletedChatSubscription = require('graphql-tag/loader!./get-deleted-chat.graphql');
 
 @Component({
   selector: 'app-chats-page',
@@ -27,52 +26,43 @@ import {
   styleUrls: ['./chats-page.component.scss']
 })
 export class ChatsPageComponent implements OnInit, OnDestroy {
-  chats: any;
+  chats: ApolloQueryObservable<Inputs.chats>;
   chatIds = new Subject<String[]>();
   chatIdsSub: Subscription;
   newChatSub: Subscription;
-  deletedChatSub: Subscription;
   newChatMessageSub: Subscription;
-  onActionSub: Subscription;
+  deletedChatSub: Subscription;
 
   constructor(
-    private apollo: Apollo,
     private router: Router,
+    private apollo: Apollo,
     private auth: AuthService,
-    private navigation: NavigationService,
   ) {}
 
   ngOnInit() {
-    const memberId = this.auth.getUser().id;
+    const loggedInUser = this.auth.getUser();
 
-    // set navigation bar
-    this.navigation.reset();
-    this.navigation.setTitle('whatsapp');
-    this.navigation.setAction('add');
-    this.onActionSub = this.navigation.onAction().subscribe(() => {
-      this.router.navigate(['/chats/new']);
-    });
-
-    // chats
-    this.chats = this.apollo.watchQuery<AllChatsQueryResult>({
-      query: AllChatsQuery,
+    this.chats = this.apollo.watchQuery<any /*GetAllChatsQuery.Result*/>({
+      query: allChatsQuery,
       variables: {
-        member: memberId,
-      },
-      fetchPolicy: 'network-only',
+        member: loggedInUser.id
+      }
     })
       .map(result => result.data.allChats)
+      .map(chats => chats.map(chat => {
+        return this.transformChat(chat);
+      }))
       .do((chats) => {
         // emit new set of ids
         const ids = chats.map((chat) => chat.id);
         this.chatIds.next(ids);
-      });
+      }) as any;
 
     // new Chat
     this.newChatSub = this.apollo.subscribe({
-      query: NewChatSubscription,
+      query: getNewChatSubscription,
       variables: {
-        member: memberId,
+        member: loggedInUser.id,
       }
     }).subscribe((data) => {
       // XXX graph.cool sends an empty node when someone deletes a chat...
@@ -93,12 +83,48 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       });
     });
 
+    // new chat message
+    this.chatIdsSub = this.chatIds.subscribe(chatIds => {
+      if (this.newChatMessageSub) {
+        this.newChatMessageSub.unsubscribe();
+        this.newChatMessageSub = undefined;
+      }
+
+      this.newChatMessageSub = this.apollo.subscribe({
+        query: getNewChatMessageSubscription,
+        variables: {
+          chats: chatIds,
+        },
+      })
+      .subscribe((data) => {
+        // push new message
+        this.chats.updateQuery(
+          (prev) => {
+            const chatId = data.Message.node.chat.id;
+            const allChats = prev.allChats.map(c => {
+              if (chatId === c.id) {
+                return update(c, {
+                  messages: {
+                    $set: [data.Message.node],
+                  },
+                });
+              }
+
+              return c;
+            });
+
+            return update(prev, { allChats: { $set: allChats } });
+          }
+        );
+      });
+    });
+
     // deleted Chat
     // XXX Fix it, no results
     this.deletedChatSub = this.apollo.subscribe({
-      query: DeletedChatSubscription,
+      query: getDeletedChatSubscription,
       variables: {
-        member: memberId,
+        member: loggedInUser.id,
       }
     }).subscribe((data) => {
       console.log('deleted', data);
@@ -120,43 +146,18 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       });
     });
 
-    // new chat message
-    this.chatIdsSub = this.chatIds.subscribe(chatIds => {
-      if (this.newChatMessageSub) {
-        this.newChatMessageSub.unsubscribe();
-        this.newChatMessageSub = undefined;
-      }
-
-      this.newChatMessageSub = this.apollo.subscribe({
-        query: NewChatMessageSubscription,
-        variables: {
-          chats: chatIds,
-        },
-      })
-      .subscribe((data) => {
-        // push new message
-        this.chats.updateQuery(
-          (prev) => {
-            const chatId = data.Message.node.chat.id;
-            const allChats = prev.allChats.map(c => {
-              if (chatId === c.id) {
-                return update(c, {
-                  messages: {
-                    $set: [filter(chatsMessageInfoFragment, data.Message.node)],
-                  },
-                });
-              }
-
-              return c;
-            });
-
-            return update(prev, { allChats: { $set: allChats } });
-          }
-        );
-      });
-    });
-
     this.chatIds.next([]);
+  }
+
+  onSelect(chat: Outputs.select) {
+    this.router.navigate(['/chat', chat.id]);
+  }
+
+  // to match the `message` property with that from `chat-list`
+  transformChat(chat: any /*GetAllChatsQuery.AllChats*/): Chat {
+    return Object.assign({}, chat, {
+      message: (chat.messages || [])[0],
+    });
   }
 
   ngOnDestroy() {
@@ -165,25 +166,19 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       this.newChatSub = undefined;
     }
 
-    if (this.deletedChatSub) {
-      this.deletedChatSub.unsubscribe();
-      this.deletedChatSub = undefined;
-    }
-
     if (this.newChatMessageSub) {
       this.newChatMessageSub.unsubscribe();
       this.newChatMessageSub = undefined;
-    }
-
-    if (this.onActionSub) {
-      this.onActionSub.unsubscribe();
-      this.onActionSub = undefined;
     }
 
     if (this.chatIdsSub) {
       this.chatIdsSub.unsubscribe();
       this.chatIdsSub = undefined;
     }
-  }
 
+    if (this.deletedChatSub) {
+      this.deletedChatSub.unsubscribe();
+      this.deletedChatSub = undefined;
+    }
+  }
 }

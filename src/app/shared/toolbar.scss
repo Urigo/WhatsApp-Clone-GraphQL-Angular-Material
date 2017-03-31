@@ -1,0 +1,27 @@
+.toolbar {
+
+  .padding-left {
+    padding-left: 16px;
+  }
+
+  .padding-right {
+    padding-right: 16px;
+  }
+
+  .left-icon {
+    padding: 0 14px 0 0;
+  }
+
+  .action-icon {
+    cursor: pointer;
+    margin: 0 5px;
+  }
+
+   .action {
+     cursor: pointer;
+   }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}

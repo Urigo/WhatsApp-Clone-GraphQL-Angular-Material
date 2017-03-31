@@ -1,1 +1,4 @@
-<app-chats [chats]="chats | async"></app-chats>
+<app-chat-list
+  [chats]="chats | async"
+  (select)="onSelect($event)">
+</app-chat-list>

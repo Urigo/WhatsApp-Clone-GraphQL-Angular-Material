@@ -1,0 +1,23 @@
+subscription getNewMessage($chat: ID!) {
+  Message(filter: {
+    AND: [
+      { mutation_in: CREATED },
+      {
+        node: {
+          chat: {
+            id: $chat
+          }
+        }
+      }
+    ]
+  }) {
+    node {
+      id
+      content
+      author {
+        id
+        name
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+query getAllContacts($member: ID!) {
+  allMembers(
+    filter: {
+      id_not: $member
+    }
+  ) {
+    id
+    name
+    title
+    chats(
+      filter: {
+        members_some: {
+          id: $member
+        }
+      }, first: 1
+    ) {
+      id
+    }
+  }
+}

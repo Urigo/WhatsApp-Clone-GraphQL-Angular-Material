@@ -1,0 +1,14 @@
+<md-list class="list">
+  <md-list-item *ngFor="let contact of contacts" (click)="doSelect(contact)">
+    <img md-list-avatar [src]="contact.name | randomAvatar" alt="avatar joe">
+    <h3 md-line>
+      {{contact.name}}
+    </h3>
+    <p md-line>
+      <span class="info">
+        {{contact.title}}
+      </span>
+    </p>
+    <md-icon color="primary">{{contact.platform === 'mobile' ? 'smartphone' : 'laptop_mac'}}</md-icon>
+  </md-list-item>
+</md-list>

@@ -1,0 +1,17 @@
+subscription getNewChatMessage($chats: [ID!]!) {
+  Message(filter: {
+    AND: [
+      { mutation_in: CREATED },
+      { node: { chat: { id_in: $chats } } }
+    ]
+  }) {
+    node {
+      id
+      content
+      chat {
+        id
+        date: createdAt
+      }
+    }
+  }
+}

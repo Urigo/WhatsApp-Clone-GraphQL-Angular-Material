@@ -1,8 +1,14 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { Member as PickedMember } from '../member-pick/member-pick.models';
-import { Member } from './login-form.models';
+export interface Member {
+  name: string;
+  password: string;
+}
+
+export namespace Outputs {
+  export type login = Member;
+}
 
 @Component({
   selector: 'app-login-form',
@@ -10,7 +16,7 @@ import { Member } from './login-form.models';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-  @Output() onSubmit = new EventEmitter<Member>();
+  @Output() login = new EventEmitter<Member>();
   loginForm: FormGroup;
 
   constructor(
@@ -24,15 +30,8 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  onPick(member: PickedMember) {
-    this.loginForm.setValue({
-      username: member.name,
-      password: member.name,
-    });
-  }
-
   submit() {
-    this.onSubmit.emit({
+    this.login.emit({
       name: this.loginForm.value.username,
       password: this.loginForm.value.password,
     });

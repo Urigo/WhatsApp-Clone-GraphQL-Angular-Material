@@ -1,0 +1,17 @@
+.list {
+  padding-top: 0;
+
+  md-list-item {
+    border-bottom: 1px solid #ececec;
+    cursor: pointer;
+  }
+
+  md-list-item:hover {
+    background-color: #ececec;
+  }
+
+  span.info {
+    font-size: 12px;
+    color: #777;
+  }
+}

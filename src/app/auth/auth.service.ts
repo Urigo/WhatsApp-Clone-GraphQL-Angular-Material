@@ -5,11 +5,18 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
-import { Member, Credentials, UserQuery, UserQueryResult } from './auth.models';
+// import { GetMemberQuery } from '../graphql-schema';
+
+const getMemberQuery = require('graphql-tag/loader!./get-member.graphql');
+
+export interface Credentials {
+  name: string;
+  password: string;
+}
 
 @Injectable()
 export class AuthService {
-  _member: Member;
+  _member: any; // GetMemberQuery.AllMembers;
 
   constructor(
     private apollo: Apollo,
@@ -23,21 +30,20 @@ export class AuthService {
     return this._member;
   }
 
-  login(credentials: Credentials): Observable<Member> {
+  login(credentials: Credentials): Observable<any /*GetMemberQuery.AllMembers*/> {
     return this.getUserByName(credentials.name)
       .do(member => {
         this._member = member;
       });
   }
 
-  getUserByName(name: string): Observable<Member> {
-    return this.apollo.query<UserQueryResult>({
-      query: UserQuery,
+  getUserByName(name: string): Observable<any /*GetMemberQuery.AllMembers*/> {
+    return this.apollo.query<any /*GetMemberQuery.Result*/>({
+      query: getMemberQuery,
       variables: {
         name,
       },
     })
       .map(result => (result.data.allMembers || [])[0]);
   }
-
 }

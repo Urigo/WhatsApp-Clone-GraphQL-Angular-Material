@@ -1,0 +1,26 @@
+query getAllChats($member: ID!) {
+  allChats(
+    filter: {
+      members_some: {
+        id: $member
+      }
+    },
+    orderBy: createdAt_DESC
+  ) {
+    members(filter: {
+      id_not: $member
+    }) {
+      id
+      name
+    }
+    id
+    date: createdAt
+    messages(last: 1) {
+      content
+      author {
+        id
+        name
+      }
+    }
+  }
+}

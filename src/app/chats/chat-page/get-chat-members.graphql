@@ -1,0 +1,10 @@
+query getChatMembers($chat: ID!, $member: ID!) {
+  Chat(id: $chat) {
+    members(filter: {
+      id_not: $member
+    }) {
+      id
+      name
+    }
+  }
+}

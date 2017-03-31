@@ -1,0 +1,14 @@
+<md-list class="list">
+  <md-list-item *ngFor="let call of calls">
+    <img md-list-avatar [src]="call.from | randomAvatar" alt="Avatar">
+    <h3 md-line>
+      {{call.from}}
+    </h3>
+    <p md-line>
+      <span class="info">
+        25-Feb 5:46 PM
+      </span>
+    </p>
+    <md-icon color="primary">{{call.video === true ? 'videocam' : 'phone'}}</md-icon>
+  </md-list-item>
+</md-list>

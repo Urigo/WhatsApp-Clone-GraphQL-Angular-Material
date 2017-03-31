@@ -5,11 +5,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthService } from './auth.service';
 import { AuthGuardService } from './auth-guard.service';
+import { LoginPageComponent } from './login-page/login-page.component';
 import { LoginFormComponent } from './login-form/login-form.component';
-import { MemberPickComponent } from './member-pick/member-pick.component';
 
 @NgModule({
   imports: [
@@ -19,7 +18,13 @@ import { MemberPickComponent } from './member-pick/member-pick.component';
     MaterialModule,
     FlexLayoutModule,
   ],
-  declarations: [LoginPageComponent, LoginFormComponent, MemberPickComponent],
-  providers: [AuthService, AuthGuardService]
+  declarations: [
+    LoginPageComponent,
+    LoginFormComponent,
+  ],
+  providers: [
+    AuthService,
+    AuthGuardService,
+  ]
 })
 export class AuthModule { }

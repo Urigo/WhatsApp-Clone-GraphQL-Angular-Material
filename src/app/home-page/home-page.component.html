@@ -1,0 +1,24 @@
+<md-toolbar class="toolbar" color="primary">
+  <span class="padding-left">WhatsApp</span>
+  
+  <span class="spacer"></span>
+    
+  <md-icon class="action-icon">search</md-icon>
+  <md-icon class="action-icon" [routerLink]="['/new']">chat</md-icon>
+  <md-icon class="action-icon padding-right">more_vert</md-icon>
+  
+  <md-toolbar-row class="nav">
+    <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill>
+      <a md-button
+        fxFlex
+        *ngFor="let link of links"
+        [routerLink]="link"
+        routerLinkActive #rla="routerLinkActive"
+        [class.active]="rla.isActive">
+        {{link}}
+      </a>
+    </div>
+  </md-toolbar-row>
+</md-toolbar>
+
+<router-outlet></router-outlet>

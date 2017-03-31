@@ -1,0 +1,17 @@
+<md-list class="list">
+  <md-list-item *ngFor="let chat of chats" (click)="select.emit(chat)">
+    <img md-list-avatar [src]="chat.members[0].name | randomAvatar" alt="avatar joe">
+    <h3 md-line class="member">
+      {{chat.members[0].name}}
+
+      <span class="date info" [title]="chat.date">
+        {{chat.date | shortTime}}
+      </span>
+    </h3>
+    <p md-line>
+      <span class="info">
+        {{chat.message?.content}}
+      </span>
+    </p>
+  </md-list-item>
+</md-list>

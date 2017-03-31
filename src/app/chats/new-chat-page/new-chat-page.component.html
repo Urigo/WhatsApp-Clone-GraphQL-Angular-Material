@@ -1,0 +1,11 @@
+<md-toolbar class="toolbar" color="primary">
+  <md-icon class="left-icon action" [routerLink]="['/home']">arrow_back</md-icon>
+  <span>New chat</span>
+</md-toolbar>
+
+<app-contact-list
+  [disabled]="selectDisabled"
+  [contacts]="contacts | async"
+  (select)="onSelect($event)">
+</app-contact-list>
+

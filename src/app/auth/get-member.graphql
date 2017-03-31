@@ -1,0 +1,11 @@
+query getMember($name: String!) {
+  allMembers(
+    filter: {
+      name_contains: $name
+    },
+    first: 1
+  ) {
+    id
+    name
+  }
+}

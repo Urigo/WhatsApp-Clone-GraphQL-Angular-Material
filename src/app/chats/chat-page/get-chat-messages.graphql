@@ -1,0 +1,14 @@
+query getChatMessages($chat: ID!) {
+  allMessages(filter: {
+    chat: {
+      id: $chat
+    }
+  }) {
+    id
+    content
+    author {
+      id
+      name
+    }
+  }
+}

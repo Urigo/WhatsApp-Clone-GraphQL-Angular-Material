@@ -1,0 +1,19 @@
+subscription getDeletedChat($member: ID!) {
+  Chat(
+    filter: {
+      AND: [{
+        mutation_in: DELETED
+      }, {
+        node: {
+          members_some: {
+            id: $member
+          }
+        }
+      }]
+    }
+  ) {
+    node {
+      id
+    }
+  }
+}

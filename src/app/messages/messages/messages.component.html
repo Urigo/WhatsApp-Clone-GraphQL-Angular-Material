@@ -1,6 +1,0 @@
-<div class="message" 
-  *ngFor="let message of messages"
-  fxLayout="column"
-  fxLayoutAlign="start stretch">
-  <app-message [message]="message" [own]="message.author.id === member"></app-message>
-</div>

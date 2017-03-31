@@ -1,33 +1,44 @@
 import 'hammerjs';
 
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ApolloModule } from 'apollo-angular';
 
-import { AppComponent } from './app.component';
+// NgModules
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
+import { ChatsModule } from './chats/chats.module';
+import { CallsModule } from './calls/calls.module';
+import { ContactsModule } from './contacts/contacts.module';
+// Declarations
+import { AppComponent } from './app.component';
+import { HomePageComponent } from './home-page/home-page.component';
+// rest
 import { provideClient } from './apollo';
-import { NavigationService } from './navigation/navigation.service';
-import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavigationComponent,
+    HomePageComponent,
   ],
   imports: [
+    // 3rd party modules
     BrowserModule,
+    ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
     ApolloModule.withClient(provideClient),
+    // our modules
     AppRoutingModule,
     AuthModule,
-  ],
-  providers: [
-    NavigationService,
+    SharedModule,
+    ChatsModule,
+    CallsModule,
+    ContactsModule,
   ],
   bootstrap: [AppComponent]
 })

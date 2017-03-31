@@ -1,0 +1,6 @@
+<div class="message" [class.left]="!own">
+  <div class="msg-block">
+    <span class="msg-txt">{{message.content}}</span>
+  </div>
+  <img class="user-pic" [src]="message.author.name | randomAvatar" alt="Avatar" />
+</div>

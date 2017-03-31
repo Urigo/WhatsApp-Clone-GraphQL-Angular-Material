@@ -1,8 +1,11 @@
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
-// https://api.graph.cool/simple/v1/navysprite-flasher-276
-const graphcoolId = 'navysprite-flasher-276';
+/*
+  explore the endpoint:
+    https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny
+*/
+const graphcoolId = 'cj0i77728mu2c0122es3qepny';
 
 // Create WebSocket client
 const wsClient = new SubscriptionClient(`wss://subscriptions.graph.cool/v1/${graphcoolId}`, {
