@@ -5,7 +5,9 @@
 
 ### Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+- [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+- [Material](https://github.com/angular/material2)
+- [FlexLayout](https://github.com/angular/flex-layout)
 
 ### GraphQL
 
