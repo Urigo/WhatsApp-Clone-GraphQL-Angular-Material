@@ -58,8 +58,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         variables: {
           chat: this.chatId,
         },
+        fetchPolicy: 'cache-and-network',
       })
-        .map(result => result.data.allMessages)
+        .map(result => result.data ? result.data.allMessages : [])
         .map(messages => messages.map(m => this.transformMessage(m))) as any;
 
         // new messages
@@ -166,6 +167,10 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   private transformMessage(message: any /*GetChatMessagesQuery.AllMessages*/): Message {
+    if (!message) {
+      return;
+    }
+
     return {
       ...message,
       own: message.author.id === this.loggedInUser.id,
