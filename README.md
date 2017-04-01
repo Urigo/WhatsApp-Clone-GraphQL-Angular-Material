@@ -2,13 +2,13 @@
 
 WhatsApp clone built with Angular and GraphQL
 
-### Angular
+## Angular
 
 - [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 - [Material](https://github.com/angular/material2)
 - [FlexLayout](https://github.com/angular/flex-layout)
 
-### GraphQL
+## GraphQL
 
 - [ApolloGraphQL](http://dev.apollodata.com) communicates with the backend
 - [graph.cool](http://graph.cool) as a backend
