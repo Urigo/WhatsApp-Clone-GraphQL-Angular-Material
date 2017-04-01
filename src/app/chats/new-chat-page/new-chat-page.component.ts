@@ -90,7 +90,7 @@ export class NewChatPageComponent implements OnInit {
           ...options,
           data: update(data, {
             allChats: {
-              $push: [result.data.createChat],
+              $unshift: [result.data.createChat],
             },
           }),
         });

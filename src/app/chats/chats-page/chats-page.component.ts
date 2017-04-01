@@ -119,6 +119,8 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.chatIds.next([]);
+
     // deleted Chat
     // XXX Fix it, no results
     this.deletedChatSub = this.apollo.subscribe({
@@ -129,7 +131,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     }).subscribe((data) => {
       console.log('deleted', data);
       // XXX graph.cool sends an empty node
-      if (!data.Chat.node) {
+      if (!data.Chat.previousValues) {
         return;
       }
 
@@ -138,15 +140,13 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
           return prev;
         }
 
-        const allChats = prev.allChats.filter((c) => data.Chat.node.id !== c.id);
+        const allChats = prev.allChats.filter((c) => data.Chat.previousValues.id !== c.id);
 
         return update(prev, {
           allChats: { $set: allChats }
         });
       });
     });
-
-    this.chatIds.next([]);
   }
 
   onSelect(chat: Outputs.select) {

@@ -12,7 +12,7 @@ subscription getDeletedChat($member: ID!) {
       }]
     }
   ) {
-    node {
+    previousValues {
       id
     }
   }
