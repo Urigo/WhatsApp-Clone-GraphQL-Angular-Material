@@ -4,7 +4,6 @@ import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-// import { filter } from 'graphql-anywhere';
 
 import * as update from 'immutability-helper';
 
@@ -13,12 +12,12 @@ import 'rxjs/add/operator/do';
 
 import { Inputs, Outputs, Chat } from '../chat-list/chat-list.component';
 import { AuthService } from '../../auth/auth.service';
-// import { GetAllChatsQuery } from '../../graphql-schema';
+import { GetAllChatsQuery } from '../../graphql';
 
-const allChatsQuery = require('graphql-tag/loader!./get-all-chats.graphql');
-const getNewChatSubscription = require('graphql-tag/loader!./get-new-chat.graphql');
-const getNewChatMessageSubscription = require('graphql-tag/loader!./get-new-chat-message.graphql');
-const getDeletedChatSubscription = require('graphql-tag/loader!./get-deleted-chat.graphql');
+const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
+const getNewChatSubscription = require('graphql-tag/loader!../../graphql/get-new-chat.graphql');
+const getNewChatMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-chat-message.graphql');
+const getDeletedChatSubscription = require('graphql-tag/loader!../../graphql/get-deleted-chat.graphql');
 
 @Component({
   selector: 'app-chats-page',
@@ -42,8 +41,8 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const loggedInUser = this.auth.getUser();
 
-    this.chats = this.apollo.watchQuery<any /*GetAllChatsQuery.Result*/>({
-      query: allChatsQuery,
+    this.chats = this.apollo.watchQuery<GetAllChatsQuery.Result>({
+      query: getAllChatsQuery,
       variables: {
         member: loggedInUser.id
       },
@@ -155,7 +154,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   }
 
   // to match the `message` property with that from `chat-list`
-  transformChat(chat: any /*GetAllChatsQuery.AllChats*/): Chat {
+  transformChat(chat: GetAllChatsQuery.AllChats): Chat {
     return Object.assign({}, chat, {
       message: (chat.messages || [])[0],
     });

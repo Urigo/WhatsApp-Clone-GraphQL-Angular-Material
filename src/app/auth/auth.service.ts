@@ -7,9 +7,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { StorageService } from '../shared/storage.service';
-// import { GetMemberQuery } from '../graphql-schema';
+import { GetMemberQuery } from '../graphql';
 
-const getMemberQuery = require('graphql-tag/loader!./get-member.graphql');
+const getMemberQuery = require('graphql-tag/loader!../graphql/get-member.graphql');
 
 export interface Credentials {
   name: string;
@@ -18,7 +18,7 @@ export interface Credentials {
 
 @Injectable()
 export class AuthService {
-  _member: any; // GetMemberQuery.AllMembers;
+  _member: GetMemberQuery.AllMembers;
 
   constructor(
     private apollo: Apollo,
@@ -36,7 +36,7 @@ export class AuthService {
     return this._member;
   }
 
-  login(credentials: Credentials): Observable<any /*GetMemberQuery.AllMembers*/> {
+  login(credentials: Credentials): Observable<GetMemberQuery.AllMembers> {
     return this.getUserByName(credentials.name)
       .do(member => {
         this._member = member;
@@ -49,8 +49,8 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  getUserByName(name: string): Observable<any /*GetMemberQuery.AllMembers*/> {
-    return this.apollo.query<any /*GetMemberQuery.Result*/>({
+  getUserByName(name: string): Observable<GetMemberQuery.AllMembers> {
+    return this.apollo.query<GetMemberQuery.Result>({
       query: getMemberQuery,
       variables: {
         name,

@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gql": "gql-gen --url https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny --template typescript --out ./src/app/graphql-schema.d.ts ./src/app/**/*.graphql"
+    "gql": "gql-gen --url https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny --template typescript --out ./src/app/graphql/index.d.ts ./src/app/graphql/*.graphql"
   },
   "private": true,
   "dependencies": {

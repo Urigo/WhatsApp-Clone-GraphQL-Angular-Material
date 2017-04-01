@@ -10,11 +10,11 @@ import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../auth/auth.service';
 import { Inputs, Outputs } from '../../contacts/contact-list/contact-list.component';
-// import { GetAllContactsQuery, CreateNewChatMutation, GetAllChatsQuery } from '../../graphql-schema';
+import { GetAllMembersQuery, StartChatMutation, GetAllChatsQuery } from '../../graphql';
 
-const allContactsQuery = require('graphql-tag/loader!../../contacts/contacts-page/get-all-contacts.graphql');
-const allChatsQuery = require('graphql-tag/loader!../chats-page/get-all-chats.graphql');
-const createChatMutation = require('graphql-tag/loader!./create-new-chat.graphql');
+const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
+const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
+const startChatMutation = require('graphql-tag/loader!../../graphql/start-chat.graphql');
 
 @Component({
   selector: 'app-new-chat-page',
@@ -23,7 +23,7 @@ const createChatMutation = require('graphql-tag/loader!./create-new-chat.graphql
 })
 export class NewChatPageComponent implements OnInit {
   contacts: Observable<Inputs.contacts>;
-  allMembers: any /*GetAllContactsQuery.AllMembers[]*/;
+  allMembers: GetAllMembersQuery.AllMembers[];
   loggedInUser: any;
   selectDisabled = false;
 
@@ -36,8 +36,8 @@ export class NewChatPageComponent implements OnInit {
   ngOnInit() {
     this.loggedInUser = this.auth.getUser();
 
-    this.contacts = this.apollo.query<any /*GetAllContactsQuery.Result*/>({
-      query: allContactsQuery,
+    this.contacts = this.apollo.query<GetAllMembersQuery.Result>({
+      query: getAllMembersQuery,
       variables: {
         member: this.loggedInUser.id
       }
@@ -63,7 +63,7 @@ export class NewChatPageComponent implements OnInit {
     }
 
     // create a new chat
-    const variables: any /*CreateChatMutation.Variables*/ = {
+    const variables: StartChatMutation.Variables = {
       members: [
         this.loggedInUser.id,
         member.id
@@ -71,20 +71,20 @@ export class NewChatPageComponent implements OnInit {
       author: this.loggedInUser.id,
     };
 
-    this.apollo.mutate<any /*CreateChatMutation.Result*/>({
-      mutation: createChatMutation,
+    this.apollo.mutate<StartChatMutation.Result>({
+      mutation: startChatMutation,
       variables,
       update: (proxy, result: any) => {
         const options: {
           query: any;
-          variables: any /*GetAllChatsQuery.Variables*/;
+          variables: GetAllChatsQuery.Variables;
         } = {
-          query: allChatsQuery,
+          query: getAllChatsQuery,
           variables: {
             member: this.loggedInUser.id,
           },
         };
-        const data = proxy.readQuery(options);
+        const data = proxy.readQuery<GetAllChatsQuery.Result>(options);
 
         proxy.writeQuery({
           ...options,

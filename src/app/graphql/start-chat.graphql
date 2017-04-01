@@ -1,4 +1,4 @@
-mutation createNewChat($members: [ID!]!, $author: ID!) {
+mutation startChat($members: [ID!]!, $author: ID!) {
   createChat(
     membersIds: $members
   ){

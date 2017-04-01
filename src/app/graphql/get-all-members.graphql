@@ -1,4 +1,4 @@
-query getAllContacts($member: ID!) {
+query getAllMembers($member: ID!) {
   allMembers(
     filter: {
       id_not: $member

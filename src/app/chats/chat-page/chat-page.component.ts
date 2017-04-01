@@ -10,14 +10,20 @@ import 'rxjs/add/operator/map';
 import { Inputs, Message } from '../message-list/message-list.component';
 import { Outputs } from '../new-message/new-message.component';
 import { AuthService } from '../../auth/auth.service';
-// import { GetChatMessagesQuery } from '../../graphql-schema';
+import {
+  GetChatMessagesQuery,
+  GetAllChatsQuery,
+  RemoveChatMutation,
+  SendMessageMutation,
+  GetChatMembersQuery,
+} from '../../graphql';
 
-const allChatMessagesQuery = require('graphql-tag/loader!./get-chat-messages.graphql');
-const sendMessageMutation = require('graphql-tag/loader!./send-message.graphql');
-const getNewMessageSubscription = require('graphql-tag/loader!./get-new-message.graphql');
-const removeChatMutation = require('graphql-tag/loader!./remove-chat.graphql');
-const getAllChatsQuery = require('graphql-tag/loader!../chats-page/get-all-chats.graphql');
-const getChatMembers = require('graphql-tag/loader!./get-chat-members.graphql');
+const getChatMessagesQuery = require('graphql-tag/loader!../../graphql/get-chat-messages.graphql');
+const sendMessageMutation = require('graphql-tag/loader!../../graphql/send-message.graphql');
+const getNewMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-message.graphql');
+const removeChatMutation = require('graphql-tag/loader!../../graphql/remove-chat.graphql');
+const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
+const getChatMembers = require('graphql-tag/loader!../../graphql/get-chat-members.graphql');
 
 @Component({
   selector: 'app-chat-page',
@@ -44,7 +50,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(paramMap => {
       this.chatId = paramMap.get('chatId');
 
-      this.members = this.apollo.watchQuery<any>({
+      this.members = this.apollo.watchQuery<GetChatMembersQuery.Result>({
         query: getChatMembers,
         variables: {
           chat: this.chatId,
@@ -53,8 +59,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       })
         .map(result => result.data.Chat.members) as any;
 
-      this.messages = this.apollo.watchQuery<any /*GetChatMessagesQuery.Result*/>({
-        query: allChatMessagesQuery,
+      this.messages = this.apollo.watchQuery<GetChatMessagesQuery.Result>({
+        query: getChatMessagesQuery,
         variables: {
           chat: this.chatId,
         },
@@ -90,7 +96,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   onMessage(message: Outputs.message) {
-    this.apollo.mutate({
+    this.apollo.mutate<SendMessageMutation.Result>({
       mutation: sendMessageMutation,
       variables: {
         chat: this.chatId,
@@ -114,16 +120,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         // prepare
         const options: {
           query: any;
-          variables: any; /*GetChatMessagesQuery.Variables*/
+          variables: GetChatMessagesQuery.Variables;
         } = {
-          query: allChatMessagesQuery,
+          query: getChatMessagesQuery,
           variables: {
             chat: this.chatId,
           },
         };
 
         // read
-        const data = proxy.readQuery(options);
+        const data = proxy.readQuery<GetChatMessagesQuery.Result>(options);
 
         // write
         proxy.writeQuery({
@@ -137,13 +143,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   delete() {
-    this.apollo.mutate({
+    this.apollo.mutate<RemoveChatMutation.Result>({
       mutation: removeChatMutation,
       variables: {
         chat: this.chatId,
       },
       update: (proxy, result: any) => {
-        const options = {
+        const options: {
+          query: any;
+          variables: GetAllChatsQuery.Variables
+        } = {
           query: getAllChatsQuery,
           variables: {
             member: this.loggedInUser.id,
@@ -166,7 +175,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private transformMessage(message: any /*GetChatMessagesQuery.AllMessages*/): Message {
+  private transformMessage(message: GetChatMessagesQuery.AllMessages): Message {
     if (!message) {
       return;
     }
@@ -177,7 +186,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  private pushMessage(prev: any /*GetChatMessagesQuery.Result*/, message: Message): any /*GetChatMessagesQuery.Result*/ {
+  private pushMessage(prev: GetChatMessagesQuery.Result, message: Message): GetChatMessagesQuery.Result {
     if (!prev || !prev.allMessages) {
       return { allMessages: [message] };
     }
