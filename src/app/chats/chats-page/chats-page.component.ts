@@ -83,6 +83,33 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       });
     });
 
+    // deleted Chat
+    // XXX Fix it, no responses
+    this.deletedChatSub = this.apollo.subscribe({
+      query: getDeletedChatSubscription,
+      variables: {
+        member: loggedInUser.id,
+      }
+    }).subscribe((data) => {
+      console.log('deleted', data);
+      // XXX graph.cool sends an empty node
+      if (!data.Chat.previousValues) {
+        return;
+      }
+
+      this.chats.updateQuery((prev) => {
+        if (!prev.allChats || prev.allChats.length === 0) {
+          return prev;
+        }
+
+        const allChats = prev.allChats.filter((c) => data.Chat.previousValues.id !== c.id);
+
+        return update(prev, {
+          allChats: { $set: allChats }
+        });
+      });
+    });
+
     // new chat message
     this.chatIdsSub = this.chatIds.subscribe(chatIds => {
       if (this.newChatMessageSub) {
@@ -120,33 +147,6 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     });
 
     this.chatIds.next([]);
-
-    // deleted Chat
-    // XXX Fix it, no results
-    this.deletedChatSub = this.apollo.subscribe({
-      query: getDeletedChatSubscription,
-      variables: {
-        member: loggedInUser.id,
-      }
-    }).subscribe((data) => {
-      console.log('deleted', data);
-      // XXX graph.cool sends an empty node
-      if (!data.Chat.previousValues) {
-        return;
-      }
-
-      this.chats.updateQuery((prev) => {
-        if (!prev.allChats || prev.allChats.length === 0) {
-          return prev;
-        }
-
-        const allChats = prev.allChats.filter((c) => data.Chat.previousValues.id !== c.id);
-
-        return update(prev, {
-          allChats: { $set: allChats }
-        });
-      });
-    });
   }
 
   onSelect(chat: Outputs.select) {
