@@ -1,7 +1,6 @@
 # WhatsApp
 
-## Angular + GraphQL
-
+WhatsApp clone built with Angular and GraphQL
 
 ### Angular
 
