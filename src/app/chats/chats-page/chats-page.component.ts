@@ -46,9 +46,10 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       query: allChatsQuery,
       variables: {
         member: loggedInUser.id
-      }
+      },
+      fetchPolicy: 'cache-and-network',
     })
-      .map(result => result.data.allChats)
+      .map(result => result.data ? result.data.allChats : [])
       .map(chats => chats.map(chat => {
         return this.transformChat(chat);
       }))
