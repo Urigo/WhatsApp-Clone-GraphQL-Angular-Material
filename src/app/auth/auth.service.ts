@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
+import { StorageService } from '../shared/storage.service';
 // import { GetMemberQuery } from '../graphql-schema';
 
 const getMemberQuery = require('graphql-tag/loader!./get-member.graphql');
@@ -20,7 +22,11 @@ export class AuthService {
 
   constructor(
     private apollo: Apollo,
-  ) { }
+    private storage: StorageService,
+    private router: Router,
+  ) {
+    this._member = this.getUserFromStorage();
+  }
 
   isLoggedIn(): boolean {
     return !!this._member;
@@ -34,7 +40,13 @@ export class AuthService {
     return this.getUserByName(credentials.name)
       .do(member => {
         this._member = member;
+        this.setUserInStorage(member);
       });
+  }
+
+  logout() {
+    this.removeUserFromStorage();
+    this.router.navigate(['/login']);
   }
 
   getUserByName(name: string): Observable<any /*GetMemberQuery.AllMembers*/> {
@@ -45,5 +57,17 @@ export class AuthService {
       },
     })
       .map(result => (result.data.allMembers || [])[0]);
+  }
+
+  private getUserFromStorage() {
+    return this.storage.get('auth.user');
+  }
+
+  private removeUserFromStorage() {
+    this.storage.remove('auth.user');
+  }
+
+  private setUserInStorage(member: any) {
+    this.storage.set('auth.user', member);
   }
 }

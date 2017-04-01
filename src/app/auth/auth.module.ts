@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { AuthGuardService } from './auth-guard.service';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
+    SharedModule,
   ],
   declarations: [
     LoginPageComponent,
