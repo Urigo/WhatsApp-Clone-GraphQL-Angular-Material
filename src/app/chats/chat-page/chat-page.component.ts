@@ -50,6 +50,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(paramMap => {
       this.chatId = paramMap.get('chatId');
 
+
+      // TODO: Merge members and messages into one query
       this.members = this.apollo.watchQuery<GetChatMembersQuery.Result>({
         query: getChatMembers,
         variables: {
@@ -59,6 +61,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       })
         .map(result => result.data.Chat.members) as any;
 
+
+      // TODO: Simplify - remove fetchPolicy and transform
       this.messages = this.apollo.watchQuery<GetChatMessagesQuery.Result>({
         query: getChatMessagesQuery,
         variables: {
@@ -75,19 +79,21 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           this.newMessageSub = undefined;
         }
 
+        // TODO: Inline subscription
         this.newMessageSub = this.apollo.subscribe({
           query: getNewMessageSubscription,
           variables: {
             chat: this.chatId,
           },
         }).subscribe((data) => {
-          this.messages.updateQuery(
-            (prev) => {
+          this.messages.updateQuery((prev) => {
               // XXX Sometimes prev is empty...
+              // TODO: why is that?
               if (!prev || !prev.allMessages) {
                 return;
               }
 
+              // TODO: Simplify this
               return this.pushMessage(prev, data.Message.node);
             }
           );
@@ -95,6 +101,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  // TODO: Inline query
   onMessage(message: Outputs.message) {
     this.apollo.mutate<SendMessageMutation.Result>({
       mutation: sendMessageMutation,
@@ -116,16 +123,15 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           },
         },
       },
+      // TODO: Simplify
+      // TODO: try to move to subscribe
       update: (proxy, result: any) => {
         // prepare
-        const options: {
-          query: any;
-          variables: GetChatMessagesQuery.Variables;
-        } = {
+        const options = {
           query: getChatMessagesQuery,
           variables: {
             chat: this.chatId,
-          },
+          }
         };
 
         // read
