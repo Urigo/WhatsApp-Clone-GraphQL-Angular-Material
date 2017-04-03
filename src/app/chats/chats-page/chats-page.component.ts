@@ -4,6 +4,7 @@ import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import gql from 'graphql-tag';
 
 import * as update from 'immutability-helper';
 
