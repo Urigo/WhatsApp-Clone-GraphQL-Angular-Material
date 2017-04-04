@@ -1,24 +1,21 @@
+import gql from 'graphql-tag';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import gql from 'graphql-tag';
-
 import * as update from 'immutability-helper';
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
-
-import { Inputs, Outputs, Chat } from '../chat-list/chat-list.component';
 import { AuthService } from '../../auth/auth.service';
 import { GetAllChatsQuery } from '../../graphql';
+import { Chat, Inputs, Outputs } from '../../models/chats';
 
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
 const getNewChatSubscription = require('graphql-tag/loader!../../graphql/get-new-chat.graphql');
 const getNewChatMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-chat-message.graphql');
 const getDeletedChatSubscription = require('graphql-tag/loader!../../graphql/get-deleted-chat.graphql');
+
 
 @Component({
   selector: 'app-chats-page',

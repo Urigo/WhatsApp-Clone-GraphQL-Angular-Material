@@ -10,7 +10,6 @@ import { ContactsModule } from '../contacts/contacts.module';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { ChatsPageComponent } from './chats-page/chats-page.component';
 import { NewChatPageComponent } from './new-chat-page/new-chat-page.component';
-import { ChatListComponent } from './chat-list/chat-list.component';
 import { MessageListComponent } from './message-list/message-list.component';
 import { MessageComponent } from './message/message.component';
 import { NewMessageComponent } from './new-message/new-message.component';
@@ -29,7 +28,6 @@ import { NewMessageComponent } from './new-message/new-message.component';
     ChatPageComponent,
     ChatsPageComponent,
     NewChatPageComponent,
-    ChatListComponent,
     MessageListComponent,
     MessageComponent,
     NewMessageComponent,
