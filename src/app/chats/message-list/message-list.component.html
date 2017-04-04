@@ -1,1 +1,1 @@
-<app-message *ngFor="let message of messages" [message]="message" [own]="message.own"></app-message>
+<app-message *ngFor="let message of messages" [message]="message" [own]="message.author.id === loggedInUser.id"></app-message>

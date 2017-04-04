@@ -213,6 +213,34 @@ export interface MemberFilter {
   id_not_starts_with: string | null;
   id_ends_with: string | null;
   id_not_ends_with: string | null;
+  image: string | null;
+  image_not: string | null;
+  image_in: Array<string>;
+  image_not_in: Array<string>;
+  image_lt: string | null;
+  image_lte: string | null;
+  image_gt: string | null;
+  image_gte: string | null;
+  image_contains: string | null;
+  image_not_contains: string | null;
+  image_starts_with: string | null;
+  image_not_starts_with: string | null;
+  image_ends_with: string | null;
+  image_not_ends_with: string | null;
+  login: string | null;
+  login_not: string | null;
+  login_in: Array<string>;
+  login_not_in: Array<string>;
+  login_lt: string | null;
+  login_lte: string | null;
+  login_gt: string | null;
+  login_gte: string | null;
+  login_contains: string | null;
+  login_not_contains: string | null;
+  login_starts_with: string | null;
+  login_not_starts_with: string | null;
+  login_ends_with: string | null;
+  login_not_ends_with: string | null;
   name: string | null;
   name_not: string | null;
   name_in: Array<string>;
@@ -364,12 +392,14 @@ export interface Node {
   id: string;
 }
 
-export type MemberOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC" | "title_ASC" | "title_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
+export type MemberOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "image_ASC" | "image_DESC" | "login_ASC" | "login_DESC" | "name_ASC" | "name_DESC" | "title_ASC" | "title_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
 
 export interface Member extends Node {
   chats: Array<Chat>;
   createdAt: DateTime;
   id: string;
+  image: string;
+  login: string;
   messages: Array<Message>;
   name: string;
   title: string | null;
@@ -637,6 +667,8 @@ export interface CreateFileMutationArgs {
 }
 
 export interface CreateMemberMutationArgs {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -668,6 +700,8 @@ export interface UpdateFileMutationArgs {
 
 export interface UpdateMemberMutationArgs {
   id: string;
+  image: string | null;
+  login: string | null;
   name: string | null;
   title: string | null;
   chatsIds: Array<string>;
@@ -764,6 +798,8 @@ export interface RemoveFromMessageOnMemberMutationArgs {
 }
 
 export interface ChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -780,6 +816,8 @@ export interface ChatmembersMemberchatsChat {
 }
 
 export interface ChatmembersMemberchatsChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -810,6 +848,8 @@ export interface ChatmessagesMessage {
 }
 
 export interface ChatmessagesMessageauthorMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -837,6 +877,8 @@ export interface MemberchatsChat {
 }
 
 export interface MemberchatsChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -863,6 +905,8 @@ export interface MemberchatsChatmessagesMessage {
 }
 
 export interface MemberchatsChatmessagesMessageauthorMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -883,6 +927,8 @@ export interface MembermessagesMessagechatChat {
 }
 
 export interface MembermessagesMessagechatChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -896,6 +942,8 @@ export interface MembermessagesMessagechatChatmessagesMessage {
 }
 
 export interface MessageauthorMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -912,6 +960,8 @@ export interface MessageauthorMemberchatsChat {
 }
 
 export interface MessageauthorMemberchatsChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -943,6 +993,8 @@ export interface MessagechatChat {
 }
 
 export interface MessagechatChatmembersMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -969,6 +1021,8 @@ export interface MessagechatChatmessagesMessage {
 }
 
 export interface MessagechatChatmessagesMessageauthorMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -1001,6 +1055,8 @@ export interface CreateFile {
 
 export interface UpdateMember {
   id: string;
+  image: string | null;
+  login: string | null;
   name: string | null;
   title: string | null;
   chatsIds: Array<string>;
@@ -1010,6 +1066,8 @@ export interface UpdateMember {
 }
 
 export interface CreateMember {
+  image: string;
+  login: string | null;
   name: string;
   title: string | null;
   chatsIds: Array<string>;
@@ -1319,6 +1377,34 @@ export interface MemberSubscriptionFilterNode {
   id_not_starts_with: string | null;
   id_ends_with: string | null;
   id_not_ends_with: string | null;
+  image: string | null;
+  image_not: string | null;
+  image_in: Array<string>;
+  image_not_in: Array<string>;
+  image_lt: string | null;
+  image_lte: string | null;
+  image_gt: string | null;
+  image_gte: string | null;
+  image_contains: string | null;
+  image_not_contains: string | null;
+  image_starts_with: string | null;
+  image_not_starts_with: string | null;
+  image_ends_with: string | null;
+  image_not_ends_with: string | null;
+  login: string | null;
+  login_not: string | null;
+  login_in: Array<string>;
+  login_not_in: Array<string>;
+  login_lt: string | null;
+  login_lte: string | null;
+  login_gt: string | null;
+  login_gte: string | null;
+  login_contains: string | null;
+  login_not_contains: string | null;
+  login_starts_with: string | null;
+  login_not_starts_with: string | null;
+  login_ends_with: string | null;
+  login_not_ends_with: string | null;
   name: string | null;
   name_not: string | null;
   name_in: Array<string>;
@@ -1373,6 +1459,8 @@ export interface MemberSubscriptionPayload {
 export interface MemberPreviousValues {
   createdAt: DateTime;
   id: string;
+  image: string;
+  login: string;
   name: string;
   title: string | null;
   updatedAt: DateTime;
@@ -1566,7 +1654,7 @@ export namespace GetAllMembersQuery {
   } 
 }
 
-export namespace GetChatMembersQuery {
+export namespace GetChatQuery {
   export type Variables = {
       chat: string;
       member: string;
@@ -1578,24 +1666,15 @@ export namespace GetChatMembersQuery {
 
   export type Chat = {
     members: Array<Members>;
+    messages: Array<Messages>;
   } 
 
   export type Members = {
     id: string;
     name: string;
   } 
-}
 
-export namespace GetChatMessagesQuery {
-  export type Variables = {
-      chat: string;
-  }
-
-  export type Result = {
-    allMessages: Array<AllMessages>;
-  } 
-
-  export type AllMessages = {
+  export type Messages = {
     id: string;
     content: string;
     author: Author;

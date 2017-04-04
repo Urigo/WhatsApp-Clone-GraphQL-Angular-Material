@@ -7,23 +7,21 @@ import * as update from 'immutability-helper';
 
 import 'rxjs/add/operator/map';
 
-import { Inputs, Message } from '../message-list/message-list.component';
+import { Inputs } from '../message-list/message-list.component';
 import { Outputs } from '../new-message/new-message.component';
 import { AuthService } from '../../auth/auth.service';
 import {
-  GetChatMessagesQuery,
-  GetAllChatsQuery,
+  GetAllChatsQuery, GetChatQuery, GetNewChatMessageSubscription,
   RemoveChatMutation,
-  SendMessageMutation,
-  GetChatMembersQuery,
+  SendMessageMutation
 } from '../../graphql';
+import Messages = GetChatQuery.Messages;
 
-const getChatMessagesQuery = require('graphql-tag/loader!../../graphql/get-chat-messages.graphql');
 const sendMessageMutation = require('graphql-tag/loader!../../graphql/send-message.graphql');
 const getNewMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-message.graphql');
 const removeChatMutation = require('graphql-tag/loader!../../graphql/remove-chat.graphql');
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
-const getChatMembers = require('graphql-tag/loader!../../graphql/get-chat-members.graphql');
+const getChatQuery = require('graphql-tag/loader!../../graphql/get-chat.graphql');
 
 @Component({
   selector: 'app-chat-page',
@@ -32,17 +30,15 @@ const getChatMembers = require('graphql-tag/loader!../../graphql/get-chat-member
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
   chatId: string;
-  messages: ApolloQueryObservable<Inputs.messages>;
-  members: ApolloQueryObservable<any>;
+  chat$: ApolloQueryObservable<Inputs.messages>;
   loggedInUser: any;
   newMessageSub: Subscription;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apollo: Apollo,
-    private auth: AuthService,
-  ) {}
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private apollo: Apollo,
+              private auth: AuthService) {
+  }
 
   ngOnInit() {
     this.loggedInUser = this.auth.getUser();
@@ -50,58 +46,36 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(paramMap => {
       this.chatId = paramMap.get('chatId');
 
-
-      // TODO: Merge members and messages into one query
-      this.members = this.apollo.watchQuery<GetChatMembersQuery.Result>({
-        query: getChatMembers,
+      this.chat$ = this.apollo.watchQuery<GetChatQuery.Result>({
+        query: getChatQuery,
         variables: {
           chat: this.chatId,
           member: this.loggedInUser.id,
         },
-      })
-        .map(result => result.data.Chat.members) as any;
+      }).map(result => result.data.Chat) as any;
+    });
 
+    this.initNewMessagesSubscription();
+  }
 
-      // TODO: Simplify - remove fetchPolicy and transform
-      this.messages = this.apollo.watchQuery<GetChatMessagesQuery.Result>({
-        query: getChatMessagesQuery,
-        variables: {
-          chat: this.chatId,
-        },
-        fetchPolicy: 'cache-and-network',
-      })
-        .map(result => result.data ? result.data.allMessages : [])
-        .map(messages => messages.map(m => this.transformMessage(m))) as any;
+  initNewMessagesSubscription() {
+    if (this.newMessageSub) {
+      this.newMessageSub.unsubscribe();
+      this.newMessageSub = undefined;
+    }
 
-        // new messages
-        if (this.newMessageSub) {
-          this.newMessageSub.unsubscribe();
-          this.newMessageSub = undefined;
-        }
-
-        // TODO: Inline subscription
-        this.newMessageSub = this.apollo.subscribe({
-          query: getNewMessageSubscription,
-          variables: {
-            chat: this.chatId,
-          },
-        }).subscribe((data) => {
-          this.messages.updateQuery((prev) => {
-              // XXX Sometimes prev is empty...
-              // TODO: why is that?
-              if (!prev || !prev.allMessages) {
-                return;
-              }
-
-              // TODO: Simplify this
-              return this.pushMessage(prev, data.Message.node);
-            }
-          );
-        });
+    this.newMessageSub = this.apollo.subscribe({
+      query: getNewMessageSubscription,
+      variables: {
+        chat: this.chatId,
+      },
+    }).subscribe(({ Message }) => {
+      if (Message.node.author.id !== this.loggedInUser.id) {
+        this.chat$.updateQuery(prev => this.addToLocalStore(prev, Message.node));
+      }
     });
   }
 
-  // TODO: Inline query
   onMessage(message: Outputs.message) {
     this.apollo.mutate<SendMessageMutation.Result>({
       mutation: sendMessageMutation,
@@ -123,31 +97,10 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           },
         },
       },
-      // TODO: Simplify
-      // TODO: try to move to subscribe
-      update: (proxy, result: any) => {
-        // prepare
-        const options = {
-          query: getChatMessagesQuery,
-          variables: {
-            chat: this.chatId,
-          }
-        };
-
-        // read
-        const data = proxy.readQuery<GetChatMessagesQuery.Result>(options);
-
-        // write
-        proxy.writeQuery({
-          ...options,
-          data: this.pushMessage(data, result.data.createMessage),
-        });
-      },
-    }).subscribe(() => {
-      //
-    });
+    }).subscribe(({ data }) => this.chat$.updateQuery(prev => this.addToLocalStore(prev, data.createMessage)));
   }
 
+  // TODO: refactor and trigger parent in order to remove chat
   delete() {
     this.apollo.mutate<RemoveChatMutation.Result>({
       mutation: removeChatMutation,
@@ -181,29 +134,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private transformMessage(message: GetChatMessagesQuery.AllMessages): Message {
-    if (!message) {
-      return;
-    }
-
-    return {
-      ...message,
-      own: message.author.id === this.loggedInUser.id,
-    };
-  }
-
-  private pushMessage(prev: GetChatMessagesQuery.Result, message: Message): GetChatMessagesQuery.Result {
-    if (!prev || !prev.allMessages) {
-      return { allMessages: [message] };
-    }
-
-    if (prev.allMessages.some(m => m.id === message.id)) {
+  addToLocalStore(prev, newMessage) {
+    if (!prev || !prev.Chat || !prev.Chat.messages) {
       return prev;
     }
 
     return update(prev, {
-      allMessages: {
-        $push: [message]
+      Chat: {
+        messages: { $push: [newMessage] }
       }
     });
   }

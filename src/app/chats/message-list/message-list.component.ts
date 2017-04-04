@@ -1,10 +1,7 @@
-import { Component, Input } from '@angular/core';
-
+import { Component, Input, OnInit } from '@angular/core';
 import { Inputs as MessageInputs } from '../message/message.component';
-
-export interface Message extends MessageInputs.message {
-  own: boolean;
-}
+import { AuthService } from '../../auth/auth.service';
+import { GetMemberQuery } from '../../graphql/index';
 
 export namespace Inputs {
   export type messages = MessageInputs.message[];
@@ -15,6 +12,13 @@ export namespace Inputs {
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss']
 })
-export class MessageListComponent {
+export class MessageListComponent implements OnInit {
+  private loggedInUser: GetMemberQuery.AllMembers;
   @Input() messages: Inputs.messages = [];
+
+  constructor(private auth: AuthService) {}
+
+  ngOnInit() {
+    this.loggedInUser = this.auth.getUser();
+  }
 }

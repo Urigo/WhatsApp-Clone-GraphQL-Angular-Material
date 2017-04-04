@@ -1,8 +1,8 @@
 <md-toolbar class="toolbar" color="primary">
   <md-icon class="left-icon action" [routerLink]="['/home']">arrow_back</md-icon>
-  
+
   <span>
-    <span *ngFor="let member of members | async">
+    <span *ngFor="let member of (chat$ | async)?.members">
       {{member.name}}
     </span>
   </span>
@@ -13,6 +13,6 @@
 </md-toolbar>
 
 <div class="container">
-  <app-message-list [messages]="messages | async"></app-message-list>
+  <app-message-list [messages]="(chat$ | async)?.messages"></app-message-list>
   <app-new-message (message)="onMessage($event)"></app-new-message>
 </div>
