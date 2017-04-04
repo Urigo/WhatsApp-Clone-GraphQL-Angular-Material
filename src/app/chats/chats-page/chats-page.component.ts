@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import { AuthService } from '../../auth/auth.service';
 import { GetAllChatsQuery } from '../../graphql';
-import { Chat, Inputs, Outputs } from '../../models/chats';
+import { Inputs, Outputs } from '../../models/chats';
 
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
 const getNewChatSubscription = require('graphql-tag/loader!../../graphql/get-new-chat.graphql');
@@ -42,7 +42,6 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     // TODO: Remove TypeScript stuff?
     // TODO: Inline query
     // TODO: remove fetchPolicy
-    // TODO: Remove most rxjs operators
     this.chats = this.apollo.watchQuery<GetAllChatsQuery.Result>({
       query: getAllChatsQuery,
       variables: {
@@ -52,6 +51,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       .map(result => result.data.allChats)
       .do(chats => this.chatIds.next(chats.map((chat) => chat.id))) as any;
 
+    // I think we can delete those for the presentation?
     // new Chat
     this.newChatSub = this.apollo.subscribe({
       query: getNewChatSubscription,
