@@ -16,7 +16,6 @@ const getNewChatSubscription = require('graphql-tag/loader!../../graphql/get-new
 const getNewChatMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-chat-message.graphql');
 const getDeletedChatSubscription = require('graphql-tag/loader!../../graphql/get-deleted-chat.graphql');
 
-
 @Component({
   selector: 'app-chats-page',
   templateUrl: './chats-page.component.html',

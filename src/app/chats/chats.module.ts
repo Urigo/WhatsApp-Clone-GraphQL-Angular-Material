@@ -13,6 +13,7 @@ import { NewChatPageComponent } from './new-chat-page/new-chat-page.component';
 import { MessageListComponent } from './message-list/message-list.component';
 import { MessageComponent } from './message/message.component';
 import { NewMessageComponent } from './new-message/new-message.component';
+import { ChatsPageItemComponent } from './chat-item/chats-page-item.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { NewMessageComponent } from './new-message/new-message.component';
     MessageListComponent,
     MessageComponent,
     NewMessageComponent,
-  ]
+    ChatsPageItemComponent,
+  ],
 })
 export class ChatsModule { }
