@@ -47,18 +47,10 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       query: getAllChatsQuery,
       variables: {
         member: loggedInUser.id
-      },
-      fetchPolicy: 'cache-and-network',
+      }
     })
-      .map(result => result.data ? result.data.allChats : [])
-      .map(chats => chats.map(chat => {
-        return this.transformChat(chat);
-      }))
-      .do((chats) => {
-        // emit new set of ids
-        const ids = chats.map((chat) => chat.id);
-        this.chatIds.next(ids);
-      }) as any;
+      .map(result => result.data.allChats)
+      .do(chats => this.chatIds.next(chats.map((chat) => chat.id))) as any;
 
     // new Chat
     this.newChatSub = this.apollo.subscribe({
@@ -153,13 +145,6 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
 
   onSelect(chat: Outputs.select) {
     this.router.navigate(['/chat', chat.id]);
-  }
-
-  // to match the `message` property with that from `chat-list`
-  transformChat(chat: GetAllChatsQuery.AllChats): Chat {
-    return Object.assign({}, chat, {
-      message: (chat.messages || [])[0],
-    });
   }
 
   ngOnDestroy() {

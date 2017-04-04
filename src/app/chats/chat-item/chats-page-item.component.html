@@ -8,8 +8,8 @@
       </span>
   </h3>
   <p md-line>
-      <span class="info">
-        {{chat.message?.content}}
+      <span class="info" *ngIf="chat.messages && chat.messages[0]">
+        {{chat.messages[0].content}}
       </span>
   </p>
 </md-list-item>
