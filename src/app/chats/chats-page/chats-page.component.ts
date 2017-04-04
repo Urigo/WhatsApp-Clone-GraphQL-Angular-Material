@@ -39,12 +39,12 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const loggedInUser = this.auth.getUser();
 
-    // TODO: combine chats-page with chat-list and create chat-item
-    // Make two examples: 1. Large query no the parent 2. query on chat-item
+    // TODO: create chat-item
+    // TODO: Make two examples: 1. Large query no the parent 2. query on chat-item
     // TODO: Remove TypeScript stuff?
-    // Inline query
-    // remove fetchPolicy
-    // Remove most rxjs operators
+    // TODO: Inline query
+    // TODO: remove fetchPolicy
+    // TODO: Remove most rxjs operators
     this.chats = this.apollo.watchQuery<GetAllChatsQuery.Result>({
       query: getAllChatsQuery,
       variables: {
