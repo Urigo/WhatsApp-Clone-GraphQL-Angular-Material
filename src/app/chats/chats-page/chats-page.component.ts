@@ -38,7 +38,6 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const loggedInUser = this.auth.getUser();
 
-    // TODO: create chat-item
     // TODO: Make two examples: 1. Large query no the parent 2. query on chat-item
     // TODO: Remove TypeScript stuff?
     // TODO: Inline query
