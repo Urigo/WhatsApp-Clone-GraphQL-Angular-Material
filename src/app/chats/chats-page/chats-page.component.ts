@@ -21,13 +21,11 @@ const getDeletedChatSubscription = require('graphql-tag/loader!../../graphql/get
   templateUrl: './chats-page.component.html',
   styleUrls: ['./chats-page.component.scss']
 })
-export class ChatsPageComponent implements OnInit, OnDestroy {
-  chats: ApolloQueryObservable<Inputs.chats>;
+export class ChatsPageComponent implements OnInit {
+  chats$: ApolloQueryObservable<Inputs.chats>;
   chatIds = new Subject<String[]>();
   chatIdsSub: Subscription;
-  newChatSub: Subscription;
   newChatMessageSub: Subscription;
-  deletedChatSub: Subscription;
 
   constructor(
     private router: Router,
@@ -41,131 +39,16 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
     // TODO: Make two examples: 1. Large query no the parent 2. query on chat-item
     // TODO: Remove TypeScript stuff?
     // TODO: Inline query
-    // TODO: remove fetchPolicy
-    this.chats = this.apollo.watchQuery<GetAllChatsQuery.Result>({
+    this.chats$ = this.apollo.watchQuery<GetAllChatsQuery.Result>({
       query: getAllChatsQuery,
       variables: {
         member: loggedInUser.id
       }
     })
-      .map(result => result.data.allChats)
-      .do(chats => this.chatIds.next(chats.map((chat) => chat.id))) as any;
-
-    // I think we can delete those for the presentation?
-    // new Chat
-    this.newChatSub = this.apollo.subscribe({
-      query: getNewChatSubscription,
-      variables: {
-        member: loggedInUser.id,
-      }
-    }).subscribe((data) => {
-      // XXX graph.cool sends an empty node when someone deletes a chat...
-      if (!data.Chat.node) {
-        return;
-      }
-
-      this.chats.updateQuery((prev) => {
-        let action = '$unshift';
-
-        if (!prev.allChats || prev.allChats.length === 0) {
-          action = '$set';
-        }
-
-        return update(prev, {
-          allChats: { [action]: [data.Chat.node] }
-        });
-      });
-    });
-
-    // deleted Chat
-    // XXX Fix it, no responses
-    this.deletedChatSub = this.apollo.subscribe({
-      query: getDeletedChatSubscription,
-      variables: {
-        member: loggedInUser.id,
-      }
-    }).subscribe((data) => {
-      console.log('deleted', data);
-      // XXX graph.cool sends an empty node
-      if (!data.Chat.previousValues) {
-        return;
-      }
-
-      this.chats.updateQuery((prev) => {
-        if (!prev.allChats || prev.allChats.length === 0) {
-          return prev;
-        }
-
-        const allChats = prev.allChats.filter((c) => data.Chat.previousValues.id !== c.id);
-
-        return update(prev, {
-          allChats: { $set: allChats }
-        });
-      });
-    });
-
-    // new chat message
-    this.chatIdsSub = this.chatIds.subscribe(chatIds => {
-      if (this.newChatMessageSub) {
-        this.newChatMessageSub.unsubscribe();
-        this.newChatMessageSub = undefined;
-      }
-
-      this.newChatMessageSub = this.apollo.subscribe({
-        query: getNewChatMessageSubscription,
-        variables: {
-          chats: chatIds,
-        },
-      })
-      .subscribe((data) => {
-        // push new message
-        this.chats.updateQuery(
-          (prev) => {
-            const chatId = data.Message.node.chat.id;
-            const allChats = prev.allChats.map(c => {
-              if (chatId === c.id) {
-                return update(c, {
-                  messages: {
-                    $set: [data.Message.node],
-                  },
-                });
-              }
-
-              return c;
-            });
-
-            return update(prev, { allChats: { $set: allChats } });
-          }
-        );
-      });
-    });
-
-    this.chatIds.next([]);
+      .map(result => result.data.allChats) as any;
   }
 
   onSelect(chat: Outputs.select) {
     this.router.navigate(['/chat', chat.id]);
-  }
-
-  ngOnDestroy() {
-    if (this.newChatSub) {
-      this.newChatSub.unsubscribe();
-      this.newChatSub = undefined;
-    }
-
-    if (this.newChatMessageSub) {
-      this.newChatMessageSub.unsubscribe();
-      this.newChatMessageSub = undefined;
-    }
-
-    if (this.chatIdsSub) {
-      this.chatIdsSub.unsubscribe();
-      this.chatIdsSub = undefined;
-    }
-
-    if (this.deletedChatSub) {
-      this.deletedChatSub.unsubscribe();
-      this.deletedChatSub = undefined;
-    }
   }
 }
