@@ -1,18 +1,21 @@
-<md-toolbar class="toolbar" color="primary">
-  <md-icon class="left-icon action" [routerLink]="['/home']">arrow_back</md-icon>
+<div class="full">
+  <md-toolbar class="toolbar" color="primary">
+    <md-icon class="left-icon action" [routerLink]="['/home']">arrow_back</md-icon>
 
-  <span>
-    <span *ngFor="let member of (chat$ | async)?.members">
-      {{member.name}}
+    <span>
+      <span *ngFor="let member of (chat$ | async)?.members">
+        {{member.name}}
+      </span>
     </span>
-  </span>
 
-  <span class="spacer"></span>
+    <span class="spacer"></span>
 
-  <md-icon class="action" (click)="delete()">delete</md-icon>
-</md-toolbar>
+    <md-icon class="action" (click)="delete()">delete</md-icon>
+  </md-toolbar>
 
-<div class="container">
-  <app-message-list [messages]="(chat$ | async)?.messages"></app-message-list>
+  <div class="container" appScrollable>
+    <app-message-list [messages]="(chat$ | async)?.messages"></app-message-list>
+  </div>
+
   <app-new-message (message)="onMessage($event)"></app-new-message>
 </div>

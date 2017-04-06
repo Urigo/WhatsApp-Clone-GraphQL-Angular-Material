@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ShortTimePipe } from './short-time.pipe';
 import { StorageService } from './storage.service';
+import { ScrollableDirective } from './scrollable.directive';
 
 @NgModule({
   imports: [
@@ -13,9 +14,11 @@ import { StorageService } from './storage.service';
   ],
   declarations: [
     ShortTimePipe,
+    ScrollableDirective,
   ],
   exports: [
     ShortTimePipe,
+    ScrollableDirective,
   ],
 })
 export class SharedModule { }

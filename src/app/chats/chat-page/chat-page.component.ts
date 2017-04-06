@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,8 +7,10 @@ import gql from 'graphql-tag';
 import * as update from 'immutability-helper';
 
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/toPromise';
 
+import { ScrollableDirective } from '../../shared/scrollable.directive';
 import { AuthService } from '../../auth/auth.service';
 import {
   GetAllChatsQuery, GetChatQuery, GetNewChatMessageSubscription,
@@ -71,6 +73,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   chat$: ApolloQueryObservable<any[]>;
   loggedInUser: any;
   newMessageSub: Subscription;
+  @ViewChild(ScrollableDirective) listContainer: ScrollableDirective;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -90,7 +93,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           chat: this.chatId,
           member: this.loggedInUser.id,
         },
-      }).map(result => result.data.Chat) as any;
+      })
+      .do(() => this.scrollDown())
+      .map(result => result.data.Chat) as any;
     });
 
     this.initNewMessagesSubscription();
@@ -111,6 +116,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       if (Message.node.author.id !== this.loggedInUser.id) {
         this.chat$.updateQuery(prev => this.addToLocalStore(prev, Message.node));
       }
+
+      this.scrollDown();
     });
   }
 
@@ -168,6 +175,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           ...options,
           data: this.addToLocalStore(data, result.data.createMessage),
         });
+
+        this.scrollDown();
       },
     }).toPromise();
   }
@@ -210,7 +219,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  addToLocalStore(prev, newMessage) {
+  ngOnDestroy() {
+    if (this.newMessageSub) {
+      this.newMessageSub.unsubscribe();
+      this.newMessageSub = undefined;
+    }
+  }
+
+  private addToLocalStore(prev, newMessage) {
     if (!prev || !prev.Chat || !prev.Chat.messages) {
       return prev;
     }
@@ -224,10 +240,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.newMessageSub) {
-      this.newMessageSub.unsubscribe();
-      this.newMessageSub = undefined;
-    }
+  private scrollDown() {
+    this.listContainer.scrollToBottom();
   }
 }
