@@ -7,6 +7,7 @@ query getAllMembers($member: ID!) {
     id
     name
     title
+    image
     chats(
       filter: {
         members_some: {

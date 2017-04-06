@@ -16,6 +16,7 @@ mutation startChat($members: [ID!]!, $author: ID!) {
     }) {
       id
       name
+      image
     }
   }
 }

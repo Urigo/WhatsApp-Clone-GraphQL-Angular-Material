@@ -1,6 +1,6 @@
 <md-list class="list">
   <md-list-item *ngFor="let contact of contacts" (click)="doSelect(contact)">
-    <img md-list-avatar [src]="contact.name | randomAvatar" alt="avatar joe">
+    <img md-list-avatar [src]="contact.image" alt="avatar joe">
     <h3 md-line>
       {{contact.name}}
     </h3>

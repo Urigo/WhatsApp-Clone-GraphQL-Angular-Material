@@ -3,7 +3,6 @@ import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthService } from '../../auth/auth.service';
-import { Inputs } from '../contact-list/contact-list.component';
 import { GetAllMembersQuery } from '../../graphql';
 
 const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
@@ -14,7 +13,7 @@ const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-mem
   styleUrls: ['./contacts-page.component.scss']
 })
 export class ContactsPageComponent implements OnInit {
-  contacts: Observable<Inputs.contacts>;
+  contacts: Observable<any[]>;
 
   constructor(
     private apollo: Apollo,

@@ -12,6 +12,7 @@ query getAllChats($member: ID!) {
     }) {
       id
       name
+      image
     }
     id
     date: createdAt
@@ -20,6 +21,7 @@ query getAllChats($member: ID!) {
       author {
         id
         name
+        image
       }
     }
   }

@@ -33,6 +33,7 @@ export class ChatsPageItemComponent implements OnInit, OnDestroy {
             }) {
               id
               name
+              image
             }
             id
             date: createdAt
@@ -41,6 +42,7 @@ export class ChatsPageItemComponent implements OnInit, OnDestroy {
               author {
                 id
                 name
+                image
               }
             }
           }

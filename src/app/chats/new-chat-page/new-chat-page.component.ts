@@ -9,7 +9,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../auth/auth.service';
-import { Inputs, Outputs } from '../../contacts/contact-list/contact-list.component';
 import { GetAllMembersQuery, StartChatMutation, GetAllChatsQuery } from '../../graphql';
 
 const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
@@ -22,7 +21,7 @@ const startChatMutation = require('graphql-tag/loader!../../graphql/start-chat.g
   styleUrls: ['./new-chat-page.component.scss']
 })
 export class NewChatPageComponent implements OnInit {
-  contacts: Observable<Inputs.contacts>;
+  contacts: Observable<any[]>;
   allMembers: GetAllMembersQuery.AllMembers[];
   loggedInUser: any;
   selectDisabled = false;
@@ -46,7 +45,7 @@ export class NewChatPageComponent implements OnInit {
       .map(result => result.data.allMembers);
   }
 
-  onSelect(contact: Outputs.select) {
+  onSelect(contact: any) {
     this.selectDisabled = true;
 
     const member = this.findMember(contact.id);

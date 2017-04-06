@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RandomAvatarPipe } from './random-avatar.pipe';
 import { ShortTimePipe } from './short-time.pipe';
 import { StorageService } from './storage.service';
 
@@ -13,11 +12,9 @@ import { StorageService } from './storage.service';
     StorageService,
   ],
   declarations: [
-    RandomAvatarPipe,
     ShortTimePipe,
   ],
   exports: [
-    RandomAvatarPipe,
     ShortTimePipe,
   ],
 })

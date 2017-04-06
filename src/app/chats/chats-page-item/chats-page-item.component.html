@@ -1,5 +1,5 @@
 <md-list-item *ngIf="chat" (click)="select.emit(chat)" class="list-item">
-  <img md-list-avatar [src]="chat.members[0].name | randomAvatar" alt="avatar">
+  <img md-list-avatar [src]="chat.members[0].image" alt="avatar">
   <h3 md-line class="member">
     {{chat.members[0].name}}
 

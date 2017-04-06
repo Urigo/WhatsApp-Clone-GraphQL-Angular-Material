@@ -12,6 +12,7 @@ query getChat($chat: ID!, $member: ID!) {
       author {
         id
         name
+        image
       }
     }
   }

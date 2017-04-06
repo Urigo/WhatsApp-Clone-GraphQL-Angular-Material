@@ -5,6 +5,7 @@ query getChatItem($chat: String!, $member: String!) {
     }) {
       id
       name
+      image
     }
     id
     date: createdAt
@@ -13,6 +14,7 @@ query getChatItem($chat: String!, $member: String!) {
       author {
         id
         name
+        image
       }
     }
   }

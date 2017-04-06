@@ -17,6 +17,7 @@ subscription getNewMessage($chat: ID!) {
       author {
         id
         name
+        image
       }
     }
   }

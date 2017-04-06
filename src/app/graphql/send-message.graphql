@@ -5,6 +5,7 @@ mutation sendMessage($author: ID!, $chat: ID!, $content: String!) {
     author {
       id
       name
+      image
     }
   }
 }

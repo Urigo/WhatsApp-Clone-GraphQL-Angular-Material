@@ -7,24 +7,15 @@ export interface Contact {
   platform?: string;
 }
 
-export namespace Inputs {
-  export type contacts = Contact[];
-  export type disabled = boolean;
-}
-
-export namespace Outputs {
-  export type select = Contact;
-}
-
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
   styleUrls: ['./contact-list.component.scss']
 })
 export class ContactListComponent {
-  @Input() contacts: Inputs.contacts = [];
-  @Input() disabled: Inputs.disabled = false;
-  @Output() select = new EventEmitter<Outputs.select>();
+  @Input() contacts: any[] = [];
+  @Input() disabled = false;
+  @Output() select = new EventEmitter<any>();
 
   doSelect(contact: Contact) {
     if (this.disabled === false) {

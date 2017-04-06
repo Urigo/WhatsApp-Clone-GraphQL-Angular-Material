@@ -21,6 +21,7 @@ type Member {
   id: ID!
   messages: [Message!]! @relation(name: "MessageOnMember")
   name: String!
+  image: String
   title: String
   updatedAt: DateTime!
 }
