@@ -3,9 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
 
-import * as update from 'immutability-helper';
-
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 import { Inputs } from '../message-list/message-list.component';
 import { Outputs } from '../new-message/new-message.component';
@@ -94,10 +93,27 @@ export class ChatPageComponent implements OnInit, OnDestroy {
             __typename: 'Member',
             id: this.loggedInUser.id,
             name: this.loggedInUser.name,
+            image: this.loggedInUser.image,
           },
         },
       },
-    }).subscribe(({ data }) => this.chat$.updateQuery(prev => this.addToLocalStore(prev, data.createMessage)));
+      update: (proxy, result: any) => {
+        const options = {
+          query: getChatQuery,
+          variables: {
+            chat: this.chatId,
+            member: this.loggedInUser.id,
+          },
+        };
+
+        const data: any = proxy.readQuery(options);
+
+        proxy.writeQuery({
+          ...options,
+          data: this.addToLocalStore(data, result.data.createMessage),
+        });
+      },
+    }).toPromise();
   }
 
   // TODO: refactor and trigger parent in order to remove chat
@@ -108,10 +124,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         chat: this.chatId,
       },
       update: (proxy, result: any) => {
-        const options: {
-          query: any;
-          variables: GetAllChatsQuery.Variables
-        } = {
+        const options = {
           query: getAllChatsQuery,
           variables: {
             member: this.loggedInUser.id,
@@ -120,13 +133,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
         const data: any = proxy.readQuery(options);
 
+        const allChats = data.allChats.filter(chat => chat.id !== result.data.deleteChat.id)
+
         proxy.writeQuery({
           ...options,
-          data: update(data, {
-            allChats: {
-              $set: data.allChats.filter(chat => chat.id !== result.data.deleteChat.id),
-            },
-          }),
+          data: {
+            ...data,
+            allChats: [...allChats],
+          },
         });
       }
     }).subscribe(() => {
@@ -139,11 +153,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       return prev;
     }
 
-    return update(prev, {
+    if (prev.Chat.messages.find(m => m.id === newMessage.id)) {
+      return prev;
+    }
+
+    return {
+      ...prev,
       Chat: {
-        messages: { $push: [newMessage] }
-      }
-    });
+        messages: [...prev.Chat.messages, newMessage],
+      },
+    };
   }
 
   ngOnDestroy() {
