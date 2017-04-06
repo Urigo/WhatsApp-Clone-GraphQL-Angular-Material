@@ -63,7 +63,7 @@ export class NewChatPageComponent implements OnInit {
     }
 
     // create a new chat
-    const variables: StartChatMutation.Variables = {
+    const variables = {
       members: [
         this.loggedInUser.id,
         member.id
@@ -75,10 +75,7 @@ export class NewChatPageComponent implements OnInit {
       mutation: startChatMutation,
       variables,
       update: (proxy, result: any) => {
-        const options: {
-          query: any;
-          variables: GetAllChatsQuery.Variables;
-        } = {
+        const options = {
           query: getAllChatsQuery,
           variables: {
             member: this.loggedInUser.id,
@@ -88,11 +85,10 @@ export class NewChatPageComponent implements OnInit {
 
         proxy.writeQuery({
           ...options,
-          data: update(data, {
-            allChats: {
-              $unshift: [result.data.createChat],
-            },
-          }),
+          data: {
+            ...data,
+            allChats: [result.data.createChat, ...data.allChats],
+          },
         });
       },
     }).subscribe(({data}) => {

@@ -1,3 +1,3 @@
 <md-list class="list">
-  <app-chats-page-item *ngFor="let chat of chats$ | async" (select)="onSelect($event)" [chat]="chat"></app-chats-page-item>
+  <app-chats-page-item *ngFor="let chat of chats$ | async" (select)="onSelect($event)" [chatId]="chat.id"></app-chats-page-item>
 </md-list>

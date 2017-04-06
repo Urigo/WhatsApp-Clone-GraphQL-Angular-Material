@@ -1654,6 +1654,39 @@ export namespace GetAllMembersQuery {
   } 
 }
 
+export namespace GetChatItemQuery {
+  export type Variables = {
+      chat: string;
+      member: string;
+  }
+
+  export type Result = {
+    Chat: Chat;
+  } 
+
+  export type Chat = {
+    members: Array<Members>;
+    id: string;
+    date: DateTime;
+    messages: Array<Messages>;
+  } 
+
+  export type Members = {
+    id: string;
+    name: string;
+  } 
+
+  export type Messages = {
+    content: string;
+    author: Author;
+  } 
+
+  export type Author = {
+    id: string;
+    name: string;
+  } 
+}
+
 export namespace GetChatQuery {
   export type Variables = {
       chat: string;

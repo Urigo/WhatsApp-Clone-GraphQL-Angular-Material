@@ -1,0 +1,15 @@
+<md-list-item *ngIf="chat" (click)="select.emit(chat)" class="list-item">
+  <img md-list-avatar [src]="chat.members[0].name | randomAvatar" alt="avatar">
+  <h3 md-line class="member">
+    {{chat.members[0].name}}
+
+    <span class="date info" [title]="chat.date">
+      {{chat.date | shortTime}}
+    </span>
+  </h3>
+  <p md-line>
+    <span class="info" *ngIf="chat.messages && chat.messages[0]">
+      {{chat.messages[0].content}}
+    </span>
+  </p>
+</md-list-item>
