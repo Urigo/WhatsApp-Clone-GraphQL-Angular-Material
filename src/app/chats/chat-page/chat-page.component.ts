@@ -17,11 +17,7 @@ import {
 } from '../../graphql';
 import Messages = GetChatQuery.Messages;
 
-// const sendMessageMutation = require('graphql-tag/loader!../../graphql/send-message.graphql');
-// const removeChatMutation = require('graphql-tag/loader!../../graphql/remove-chat.graphql');
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
-
-// const getNewMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-message.graphql');
 const getNewMessageSubscription = gql`
   subscription getNewChatMessage($chat: ID!) {
     Message(filter: {
@@ -42,8 +38,6 @@ const getNewMessageSubscription = gql`
     }
   }
 `;
-
-// const getChatQuery = require('graphql-tag/loader!../../graphql/get-chat.graphql');
 const getChatQuery = gql`
   query getChat($chat: ID!, $member: ID!) {
     Chat(id: $chat) {

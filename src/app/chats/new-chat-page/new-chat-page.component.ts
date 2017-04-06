@@ -4,6 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
 import * as update from 'immutability-helper';
+import gql from 'graphql-tag';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -13,7 +14,6 @@ import { GetAllMembersQuery, StartChatMutation, GetAllChatsQuery } from '../../g
 
 const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
-const startChatMutation = require('graphql-tag/loader!../../graphql/start-chat.graphql');
 
 @Component({
   selector: 'app-new-chat-page',
@@ -71,7 +71,31 @@ export class NewChatPageComponent implements OnInit {
     };
 
     this.apollo.mutate<StartChatMutation.Result>({
-      mutation: startChatMutation,
+      mutation: gql`
+        mutation startChat($members: [ID!]!, $author: ID!) {
+          createChat(
+            membersIds: $members
+          ){
+            id
+            date: createdAt
+            messages(last: 1) {
+              content
+              author {
+                id
+                name
+              }
+            }
+            members(filter: {
+              id_not: $author
+            }) {
+              id
+              name
+              image
+            }
+          }
+        }
+
+      `,
       variables,
       update: (proxy, result: any) => {
         const options = {

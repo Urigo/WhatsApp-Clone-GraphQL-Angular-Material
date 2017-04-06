@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
+import gql from 'graphql-tag';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { StorageService } from '../shared/storage.service';
 import { GetMemberQuery } from '../graphql';
-
-const getMemberQuery = require('graphql-tag/loader!../graphql/get-member.graphql');
 
 export interface Credentials {
   name: string;
@@ -51,7 +51,20 @@ export class AuthService {
 
   getUserByName(name: string): Observable<GetMemberQuery.AllMembers> {
     return this.apollo.query<GetMemberQuery.Result>({
-      query: getMemberQuery,
+      query: gql`
+        query getMember($name: String!) {
+          allMembers(
+            filter: {
+              name_contains: $name
+            },
+            first: 1
+          ) {
+            id
+            name
+            image
+          }
+        }
+      `,
       variables: {
         name,
       },

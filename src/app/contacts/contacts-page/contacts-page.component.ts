@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
+import gql from 'graphql-tag';
+
 import { AuthService } from '../../auth/auth.service';
 import { GetAllMembersQuery } from '../../graphql';
-
-const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
 
 @Component({
   selector: 'app-contacts-page',
@@ -24,7 +24,29 @@ export class ContactsPageComponent implements OnInit {
     const loggedInUser = this.auth.getUser();
 
     this.contacts = this.apollo.query<GetAllMembersQuery.Result>({
-      query: getAllMembersQuery,
+      query: gql`
+        query getAllMembers($member: ID!) {
+          allMembers(
+            filter: {
+              id_not: $member
+            }
+          ) {
+            id
+            name
+            title
+            image
+            chats(
+              filter: {
+                members_some: {
+                  id: $member
+                }
+              }, first: 1
+            ) {
+              id
+            }
+          }
+        }
+      `,
       variables: {
         member: loggedInUser.id
       }
