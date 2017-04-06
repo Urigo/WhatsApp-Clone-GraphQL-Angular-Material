@@ -47,7 +47,7 @@ export class ChatsPageComponent implements OnInit {
       `,
       variables: {
         member: loggedInUser.id
-      }
+      },
     })
       .map(result => result.data.allChats) as any;
   }

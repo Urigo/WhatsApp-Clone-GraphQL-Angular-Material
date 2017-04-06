@@ -1,4 +1,4 @@
-import { ApolloClient, createNetworkInterface } from 'apollo-client';
+import { ApolloClient, createBatchingNetworkInterface } from 'apollo-client';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
 /*
@@ -11,8 +11,9 @@ const graphcoolId = 'cj0i77728mu2c0122es3qepny';
 const wsClient = new SubscriptionClient(`wss://subscriptions.graph.cool/v1/${graphcoolId}`, {
   reconnect: true
 });
-const networkInterface = createNetworkInterface({
+const networkInterface = createBatchingNetworkInterface({
   uri: `https://api.graph.cool/simple/v1/${graphcoolId}`,
+  batchInterval: 10,
 });
 
 // Extend the network interface with the WebSocket
@@ -24,6 +25,12 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
 const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   addTypename: true,
+  dataIdFromObject: (o: any) => {
+    if (o.__typename && o.id) {
+      return `${o.__typename}__${o.id}`;
+    }
+    return null;
+  },
 });
 
 export function provideClient(): ApolloClient {

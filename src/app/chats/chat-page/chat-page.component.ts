@@ -3,11 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 import { Subscription } from 'rxjs/Subscription';
 
+import gql from 'graphql-tag';
+import * as update from 'immutability-helper';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { Inputs } from '../message-list/message-list.component';
-import { Outputs } from '../new-message/new-message.component';
 import { AuthService } from '../../auth/auth.service';
 import {
   GetAllChatsQuery, GetChatQuery, GetNewChatMessageSubscription,
@@ -16,11 +17,55 @@ import {
 } from '../../graphql';
 import Messages = GetChatQuery.Messages;
 
-const sendMessageMutation = require('graphql-tag/loader!../../graphql/send-message.graphql');
-const getNewMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-message.graphql');
-const removeChatMutation = require('graphql-tag/loader!../../graphql/remove-chat.graphql');
+// const sendMessageMutation = require('graphql-tag/loader!../../graphql/send-message.graphql');
+// const removeChatMutation = require('graphql-tag/loader!../../graphql/remove-chat.graphql');
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
-const getChatQuery = require('graphql-tag/loader!../../graphql/get-chat.graphql');
+
+// const getNewMessageSubscription = require('graphql-tag/loader!../../graphql/get-new-message.graphql');
+const getNewMessageSubscription = gql`
+  subscription getNewChatMessage($chat: ID!) {
+    Message(filter: {
+      AND: [
+        { mutation_in: CREATED },
+        { node: { chat: { id: $chat } } }
+      ]
+    }) {
+      node {
+        id
+        content
+        author {
+          id
+          name
+          image
+        }
+      }
+    }
+  }
+`;
+
+// const getChatQuery = require('graphql-tag/loader!../../graphql/get-chat.graphql');
+const getChatQuery = gql`
+  query getChat($chat: ID!, $member: ID!) {
+    Chat(id: $chat) {
+      id
+      members(filter: {
+        id_not: $member
+      }) {
+        id
+        name
+      }
+      messages {
+        id
+        content
+        author {
+          id
+          name
+          image
+        }
+      }
+    }
+  }
+`;
 
 @Component({
   selector: 'app-chat-page',
@@ -29,7 +74,7 @@ const getChatQuery = require('graphql-tag/loader!../../graphql/get-chat.graphql'
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
   chatId: string;
-  chat$: ApolloQueryObservable<Inputs.messages>;
+  chat$: ApolloQueryObservable<any[]>;
   loggedInUser: any;
   newMessageSub: Subscription;
 
@@ -75,9 +120,21 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onMessage(message: Outputs.message) {
+  onMessage(message: string) {
     this.apollo.mutate<SendMessageMutation.Result>({
-      mutation: sendMessageMutation,
+      mutation: gql`
+        mutation sendMessage($author: ID!, $chat: ID!, $content: String!) {
+          createMessage(authorId: $author, chatId: $chat, content: $content) {
+            id
+            content
+            author {
+              id
+              name
+              image
+            }
+          }
+        }
+      `,
       variables: {
         chat: this.chatId,
         author: this.loggedInUser.id,
@@ -108,6 +165,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
         const data: any = proxy.readQuery(options);
 
+        if (data.Chat.messages.find(m => m.id === result.data.createMessage.id)) {
+          console.log('chat exists');
+          return;
+        }
+
         proxy.writeQuery({
           ...options,
           data: this.addToLocalStore(data, result.data.createMessage),
@@ -119,7 +181,13 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   // TODO: refactor and trigger parent in order to remove chat
   delete() {
     this.apollo.mutate<RemoveChatMutation.Result>({
-      mutation: removeChatMutation,
+      mutation: gql`
+        mutation removeChat($chat: ID!) {
+          deleteChat(id: $chat) {
+            id
+          }
+        }
+      `,
       variables: {
         chat: this.chatId,
       },
@@ -153,16 +221,13 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       return prev;
     }
 
-    if (prev.Chat.messages.find(m => m.id === newMessage.id)) {
-      return prev;
-    }
-
-    return {
-      ...prev,
+    return update(prev, {
       Chat: {
-        messages: [...prev.Chat.messages, newMessage],
+        messages: {
+          $push: [newMessage],
+        },
       },
-    };
+    });
   }
 
   ngOnDestroy() {
