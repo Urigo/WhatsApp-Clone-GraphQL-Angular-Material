@@ -1,5 +1,7 @@
 # WhatsApp
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Urigo/WhatsApp-Clone-GraphQL-Angular-Material.svg)](https://greenkeeper.io/)
+
 WhatsApp clone built with Angular and GraphQL
 
 ## Angular
