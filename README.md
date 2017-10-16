@@ -4,7 +4,7 @@ WhatsApp clone built with Angular and GraphQL
 
 ## Angular
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+- [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0-rc.0.
 - [Material](https://github.com/angular/material2)
 - [FlexLayout](https://github.com/angular/flex-layout)
 
@@ -29,6 +29,6 @@ Use [`graphql-up`](https://www.npmjs.com/package/graphql-up) to create an endpoi
 graphql-up schema.graphql
 ```
 
-Change the `graphcoolId` variable in [`./src/app/apollo.ts`](./src/app/apollo.ts) to match it with your endpoint
+Change the environments variables to match it with your endpoint
 
 Now it's all ready to play with!

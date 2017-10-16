@@ -1,21 +1,21 @@
-<md-toolbar class="toolbar" color="primary">
+<mat-toolbar class="toolbar" color="primary">
   <span class="padding-left">WhatsApp</span>
   
   <span class="spacer"></span>
     
-  <md-icon class="action-icon">search</md-icon>
-  <md-icon class="action-icon" [routerLink]="['/new']">chat</md-icon>
-  <md-icon class="action-icon padding-right" [mdMenuTriggerFor]="menu">more_vert</md-icon>
-  <md-menu #menu="mdMenu">
-    <button md-menu-item (click)="logout()">
-      <md-icon>power_settings_new</md-icon>
+  <mat-icon class="action-icon">search</mat-icon>
+  <mat-icon class="action-icon" [routerLink]="['/new']">chat</mat-icon>
+  <mat-icon class="action-icon padding-right" [matMenuTriggerFor]="menu">more_vert</mat-icon>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>power_settings_new</mat-icon>
       <span>Logout</span>
     </button>
-  </md-menu>
+  </mat-menu>
   
-  <md-toolbar-row class="nav">
+  <mat-toolbar-row class="nav">
     <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill>
-      <a md-button
+      <a mat-button
         fxFlex
         *ngFor="let link of links"
         [routerLink]="link"
@@ -24,7 +24,7 @@
         {{link}}
       </a>
     </div>
-  </md-toolbar-row>
-</md-toolbar>
+  </mat-toolbar-row>
+</mat-toolbar>
 
 <router-outlet></router-outlet>

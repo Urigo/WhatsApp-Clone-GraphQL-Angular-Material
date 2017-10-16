@@ -1,11 +1,11 @@
 <form [formGroup]="loginForm" (submit)="submit()" fxLayout="column" fxLayoutAlign="center center">
-  <md-input-container>
-    <input mdInput type="text" placeholder="username" formControlName="username">
-  </md-input-container>
+  <mat-form-field>
+    <input matInput type="text" placeholder="username" formControlName="username">
+  </mat-form-field>
   
-  <md-input-container>
-    <input mdInput type="password" placeholder="password" formControlName="password">
-  </md-input-container>
+  <mat-form-field>
+    <input matInput type="password" placeholder="password" formControlName="password">
+  </mat-form-field>
 
-  <button color="primary" md-button type="submit">Log in</button>
+  <button color="primary" mat-button type="submit">Log in</button>
 </form>

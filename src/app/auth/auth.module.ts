@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AuthService } from './auth.service';
 import { AuthGuardService } from './auth-guard.service';
@@ -16,8 +14,6 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    MaterialModule,
-    FlexLayoutModule,
     SharedModule,
   ],
   declarations: [

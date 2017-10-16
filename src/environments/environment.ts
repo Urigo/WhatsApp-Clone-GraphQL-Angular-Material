@@ -4,5 +4,9 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apollo: {
+    http: 'https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny',
+    subscriptions: 'wss://subscriptions.graph.cool/v1/cj0i77728mu2c0122es3qepny'
+  }
 };

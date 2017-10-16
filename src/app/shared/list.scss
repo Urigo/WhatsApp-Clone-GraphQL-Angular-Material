@@ -1,12 +1,12 @@
 .list {
   padding-top: 0;
 
-  md-list-item {
+  mat-list-item {
     border-bottom: 1px solid #ececec;
     cursor: pointer;
   }
 
-  md-list-item:hover {
+  mat-list-item:hover {
     background-color: #ececec;
   }
 

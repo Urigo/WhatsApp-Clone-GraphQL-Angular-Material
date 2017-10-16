@@ -17,6 +17,7 @@ export class StorageService {
   get(key: string) {
     if (this.available) {
       const value = this.storage().getItem(key);
+
       return value && JSON.parse(value);
     }
   }

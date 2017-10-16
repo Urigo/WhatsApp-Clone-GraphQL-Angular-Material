@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Apollo } from 'apollo-angular';
+import { Apollo } from '@kamilkisiela/apollo-angular';
 import { Observable } from 'rxjs/Observable';
 
 import * as update from 'immutability-helper';
@@ -10,7 +10,7 @@ import 'rxjs/add/operator/do';
 
 import { AuthService } from '../../auth/auth.service';
 import { Inputs, Outputs } from '../../contacts/contact-list/contact-list.component';
-import { GetAllMembersQuery, StartChatMutation, GetAllChatsQuery } from '../../graphql';
+import { GetAllMembers, StartChat, GetAllChats } from '../../graphql';
 
 const getAllMembersQuery = require('graphql-tag/loader!../../graphql/get-all-members.graphql');
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
@@ -23,7 +23,7 @@ const startChatMutation = require('graphql-tag/loader!../../graphql/start-chat.g
 })
 export class NewChatPageComponent implements OnInit {
   contacts: Observable<Inputs.contacts>;
-  allMembers: GetAllMembersQuery.AllMembers[];
+  allMembers: GetAllMembers.AllMembers[];
   loggedInUser: any;
   selectDisabled = false;
 
@@ -36,7 +36,7 @@ export class NewChatPageComponent implements OnInit {
   ngOnInit() {
     this.loggedInUser = this.auth.getUser();
 
-    this.contacts = this.apollo.query<GetAllMembersQuery.Result>({
+    this.contacts = this.apollo.query<GetAllMembers.Query>({
       query: getAllMembersQuery,
       variables: {
         member: this.loggedInUser.id
@@ -63,7 +63,7 @@ export class NewChatPageComponent implements OnInit {
     }
 
     // create a new chat
-    const variables: StartChatMutation.Variables = {
+    const variables: StartChat.Variables = {
       members: [
         this.loggedInUser.id,
         member.id
@@ -71,20 +71,20 @@ export class NewChatPageComponent implements OnInit {
       author: this.loggedInUser.id,
     };
 
-    this.apollo.mutate<StartChatMutation.Result>({
+    this.apollo.mutate<StartChat.Mutation>({
       mutation: startChatMutation,
       variables,
       update: (proxy, result: any) => {
         const options: {
           query: any;
-          variables: GetAllChatsQuery.Variables;
+          variables: GetAllChats.Variables;
         } = {
           query: getAllChatsQuery,
           variables: {
             member: this.loggedInUser.id,
           },
         };
-        const data = proxy.readQuery<GetAllChatsQuery.Result>(options);
+        const data = proxy.readQuery<GetAllChats.Query>(options);
 
         proxy.writeQuery({
           ...options,

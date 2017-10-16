@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, ApolloQueryObservable } from 'apollo-angular';
+import { Apollo, QueryRef } from '@kamilkisiela/apollo-angular';
+import { ApolloQueryResult } from 'apollo-client';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import * as update from 'immutability-helper';
@@ -11,11 +13,11 @@ import { Inputs, Message } from '../message-list/message-list.component';
 import { Outputs } from '../new-message/new-message.component';
 import { AuthService } from '../../auth/auth.service';
 import {
-  GetChatMessagesQuery,
-  GetAllChatsQuery,
-  RemoveChatMutation,
-  SendMessageMutation,
-  GetChatMembersQuery,
+  GetChatMessages,
+  GetAllChats,
+  RemoveChat,
+  SendMessage,
+  GetChatMembers,
 } from '../../graphql';
 
 const getChatMessagesQuery = require('graphql-tag/loader!../../graphql/get-chat-messages.graphql');
@@ -32,8 +34,10 @@ const getChatMembers = require('graphql-tag/loader!../../graphql/get-chat-member
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
   chatId: string;
-  messages: ApolloQueryObservable<Inputs.messages>;
-  members: ApolloQueryObservable<any>;
+  messages: Observable<Inputs.messages>;
+  messagesRef: QueryRef<GetChatMessages.Query>;
+  members: Observable<ApolloQueryResult<any>>;
+  membersRef: QueryRef<any>;
   loggedInUser: any;
   newMessageSub: Subscription;
 
@@ -50,24 +54,32 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(paramMap => {
       this.chatId = paramMap.get('chatId');
 
-      this.members = this.apollo.watchQuery<GetChatMembersQuery.Result>({
+      // members
+      this.membersRef = this.apollo.watchQuery<GetChatMembers.Query>({
         query: getChatMembers,
         variables: {
           chat: this.chatId,
           member: this.loggedInUser.id,
         },
       })
-        .map(result => result.data.Chat.members) as any;
 
-      this.messages = this.apollo.watchQuery<GetChatMessagesQuery.Result>({
+      this.members = this.membersRef
+        .valueChanges
+        .map(result => result.data.Chat.members);
+
+      // messages
+      this.messagesRef = this.apollo.watchQuery<GetChatMessages.Query>({
         query: getChatMessagesQuery,
         variables: {
           chat: this.chatId,
         },
         fetchPolicy: 'cache-and-network',
-      })
+      });
+
+      this.messages = this.messagesRef
+        .valueChanges
         .map(result => result.data ? result.data.allMessages : [])
-        .map(messages => messages.map(m => this.transformMessage(m))) as any;
+        .map(messages => messages.map(m => this.transformMessage(m)));
 
         // new messages
         if (this.newMessageSub) {
@@ -80,8 +92,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           variables: {
             chat: this.chatId,
           },
-        }).subscribe((data) => {
-          this.messages.updateQuery(
+        }).subscribe(({data}) => {
+          this.messagesRef.updateQuery(
             (prev) => {
               // XXX Sometimes prev is empty...
               if (!prev || !prev.allMessages) {
@@ -96,7 +108,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   onMessage(message: Outputs.message) {
-    this.apollo.mutate<SendMessageMutation.Result>({
+    this.apollo.mutate<SendMessage.Mutation>({
       mutation: sendMessageMutation,
       variables: {
         chat: this.chatId,
@@ -116,11 +128,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           },
         },
       },
-      update: (proxy, result: any) => {
+      update: (proxy, result) => {
         // prepare
         const options: {
           query: any;
-          variables: GetChatMessagesQuery.Variables;
+          variables: GetChatMessages.Variables;
         } = {
           query: getChatMessagesQuery,
           variables: {
@@ -129,7 +141,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         };
 
         // read
-        const data = proxy.readQuery<GetChatMessagesQuery.Result>(options);
+        // BUG: readQuery returns the result instead of {result, complete}
+        // apollographql/apollo-client#2308
+        const data: any = proxy.readQuery<GetChatMessages.Query>(options);
 
         // write
         proxy.writeQuery({
@@ -143,15 +157,15 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   delete() {
-    this.apollo.mutate<RemoveChatMutation.Result>({
+    this.apollo.mutate<RemoveChat.Mutation>({
       mutation: removeChatMutation,
       variables: {
         chat: this.chatId,
       },
-      update: (proxy, result: any) => {
+      update: (proxy, result) => {
         const options: {
           query: any;
-          variables: GetAllChatsQuery.Variables
+          variables: GetAllChats.Variables
         } = {
           query: getAllChatsQuery,
           variables: {
@@ -159,7 +173,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           },
         };
 
-        const data: any = proxy.readQuery(options);
+        // BUG: readQuery returns the result instead of {result, complete}
+        // apollographql/apollo-client#2308
+        const data: any = proxy.readQuery<GetAllChats.Query>(options);
 
         proxy.writeQuery({
           ...options,
@@ -175,18 +191,19 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private transformMessage(message: GetChatMessagesQuery.AllMessages): Message {
+  private transformMessage(message: GetChatMessages.AllMessages): Message {
     if (!message) {
       return;
     }
 
     return {
       ...message,
+      author: message.author,
       own: message.author.id === this.loggedInUser.id,
     };
   }
 
-  private pushMessage(prev: GetChatMessagesQuery.Result, message: Message): GetChatMessagesQuery.Result {
+  private pushMessage(prev: GetChatMessages.Query, message: Message): GetChatMessages.Query {
     if (!prev || !prev.allMessages) {
       return { allMessages: [message] };
     }

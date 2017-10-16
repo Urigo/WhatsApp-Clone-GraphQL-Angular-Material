@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Apollo, ApolloQueryObservable } from 'apollo-angular';
+import { Apollo, QueryRef } from '@kamilkisiela/apollo-angular';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
@@ -12,7 +12,7 @@ import 'rxjs/add/operator/do';
 
 import { Inputs, Outputs, Chat } from '../chat-list/chat-list.component';
 import { AuthService } from '../../auth/auth.service';
-import { GetAllChatsQuery } from '../../graphql';
+import { GetAllChats } from '../../graphql';
 
 const getAllChatsQuery = require('graphql-tag/loader!../../graphql/get-all-chats.graphql');
 const getNewChatSubscription = require('graphql-tag/loader!../../graphql/get-new-chat.graphql');
@@ -25,7 +25,8 @@ const getDeletedChatSubscription = require('graphql-tag/loader!../../graphql/get
   styleUrls: ['./chats-page.component.scss']
 })
 export class ChatsPageComponent implements OnInit, OnDestroy {
-  chats: ApolloQueryObservable<Inputs.chats>;
+  chats: Observable<Inputs.chats>;
+  chatsRef: QueryRef<GetAllChats.Query>;
   chatIds = new Subject<String[]>();
   chatIdsSub: Subscription;
   newChatSub: Subscription;
@@ -41,13 +42,16 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const loggedInUser = this.auth.getUser();
 
-    this.chats = this.apollo.watchQuery<GetAllChatsQuery.Result>({
+    this.chatsRef = this.apollo.watchQuery<GetAllChats.Query>({
       query: getAllChatsQuery,
       variables: {
         member: loggedInUser.id
       },
       fetchPolicy: 'cache-and-network',
-    })
+    });
+
+    this.chats = this.chatsRef
+      .valueChanges
       .map(result => result.data ? result.data.allChats : [])
       .map(chats => chats.map(chat => {
         return this.transformChat(chat);
@@ -70,7 +74,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.chats.updateQuery((prev) => {
+      this.chatsRef.updateQuery((prev) => {
         let action = '$unshift';
 
         if (!prev.allChats || prev.allChats.length === 0) {
@@ -97,7 +101,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.chats.updateQuery((prev) => {
+      this.chatsRef.updateQuery((prev) => {
         if (!prev.allChats || prev.allChats.length === 0) {
           return prev;
         }
@@ -125,7 +129,7 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
       })
       .subscribe((data) => {
         // push new message
-        this.chats.updateQuery(
+        this.chatsRef.updateQuery(
           (prev) => {
             const chatId = data.Message.node.chat.id;
             const allChats = prev.allChats.map(c => {
@@ -154,10 +158,10 @@ export class ChatsPageComponent implements OnInit, OnDestroy {
   }
 
   // to match the `message` property with that from `chat-list`
-  transformChat(chat: GetAllChatsQuery.AllChats): Chat {
+  transformChat(chat: GetAllChats.AllChats): Chat {
     return Object.assign({}, chat, {
       message: (chat.messages || [])[0],
-    });
+    }) as Chat;
   }
 
   ngOnDestroy() {

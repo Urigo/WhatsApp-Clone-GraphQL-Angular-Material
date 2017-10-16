@@ -1,5 +1,5 @@
-<md-toolbar class="toolbar" color="primary">
-  <md-icon class="left-icon action" [routerLink]="['/home']">arrow_back</md-icon>
+<mat-toolbar class="toolbar" color="primary">
+  <mat-icon class="left-icon action" [routerLink]="['/home']">arrow_back</mat-icon>
   
   <span>
     <span *ngFor="let member of members | async">
@@ -9,8 +9,8 @@
 
   <span class="spacer"></span>
 
-  <md-icon class="action" (click)="delete()">delete</md-icon>
-</md-toolbar>
+  <mat-icon class="action" (click)="delete()">delete</mat-icon>
+</mat-toolbar>
 
 <div class="container">
   <app-message-list [messages]="messages | async"></app-message-list>
