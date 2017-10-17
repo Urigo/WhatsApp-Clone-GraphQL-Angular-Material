@@ -1,1786 +1,1624 @@
+/* tslint:disable */
+
+
+export type DateTime = any;
+/* An object with an ID */
+export interface Node {
+  id: string; /* The id of the object. */
+}
 
 export interface Query {
-  allChats: Array<Chat>;
-  allFiles: Array<File>;
-  allMembers: Array<Member>;
-  allMessages: Array<Message>;
-  allUsers: Array<User>;
-  _allChatsMeta: _QueryMeta;
-  _allFilesMeta: _QueryMeta;
-  _allMembersMeta: _QueryMeta;
-  _allMessagesMeta: _QueryMeta;
-  _allUsersMeta: _QueryMeta;
-  Chat: Chat | null;
-  File: File | null;
-  Member: Member | null;
-  Message: Message | null;
-  User: User | null;
-  user: User | null;
-  node: Node | null;
+  allChats: Chat[]; 
+  allFiles: File[]; 
+  allMembers: Member[]; 
+  allMessages: Message[]; 
+  allUsers: User[]; 
+  _allChatsMeta: _QueryMeta; 
+  _allFilesMeta: _QueryMeta; 
+  _allMembersMeta: _QueryMeta; 
+  _allMessagesMeta: _QueryMeta; 
+  _allUsersMeta: _QueryMeta; 
+  Chat?: Chat; 
+  File?: File; 
+  Member?: Member; 
+  Message?: Message; 
+  User?: User; 
+  user?: User; 
+  node?: Node; /* Fetches an object given its ID */
 }
 
-export interface AllChatsQueryArgs {
-  filter: ChatFilter | null;
-  orderBy: ChatOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface Chat extends Node {
+  createdAt: DateTime; 
+  id: string; 
+  members: Member[]; 
+  messages: Message[]; 
+  updatedAt: DateTime; 
+  _membersMeta: _QueryMeta; /* Meta information about the query. */
+  _messagesMeta: _QueryMeta; /* Meta information about the query. */
+}
+/* Represents a user */
+export interface Member extends Node {
+  chats: Chat[]; 
+  createdAt: DateTime; 
+  id: string; 
+  image: string; 
+  login: string; 
+  messages: Message[]; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  updatedAt: DateTime; 
+  _chatsMeta: _QueryMeta; /* Meta information about the query. */
+  _messagesMeta: _QueryMeta; /* Meta information about the query. */
+}
+/* Just a message */
+export interface Message extends Node {
+  author?: Member; 
+  chat?: Chat; 
+  content: string; 
+  createdAt: DateTime; 
+  id: string; 
+  updatedAt: DateTime; 
+}
+/* Meta information about the query. */
+export interface _QueryMeta {
+  count: number; 
 }
 
-export interface AllFilesQueryArgs {
-  filter: FileFilter | null;
-  orderBy: FileOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface File extends Node {
+  contentType: string; 
+  createdAt: DateTime; 
+  id: string; 
+  name: string; 
+  secret: string; 
+  size: number; 
+  updatedAt: DateTime; 
+  url: string; 
 }
 
-export interface AllMembersQueryArgs {
-  filter: MemberFilter | null;
-  orderBy: MemberOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface User extends Node {
+  createdAt: DateTime; 
+  id: string; 
+  updatedAt: DateTime; 
 }
 
-export interface AllMessagesQueryArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface Mutation {
+  createChat?: Chat; 
+  createFile?: File; 
+  createMember?: Member; 
+  createMessage?: Message; 
+  updateChat?: Chat; 
+  updateFile?: File; 
+  updateMember?: Member; 
+  updateMessage?: Message; 
+  updateUser?: User; 
+  updateOrCreateChat?: Chat; 
+  updateOrCreateFile?: File; 
+  updateOrCreateMember?: Member; 
+  updateOrCreateMessage?: Message; 
+  updateOrCreateUser?: User; 
+  deleteChat?: Chat; 
+  deleteFile?: File; 
+  deleteMember?: Member; 
+  deleteMessage?: Message; 
+  deleteUser?: User; 
+  addToChatOnMember?: AddToChatOnMemberPayload; 
+  addToChatOnMessage?: AddToChatOnMessagePayload; 
+  addToMessageOnMember?: AddToMessageOnMemberPayload; 
+  removeFromChatOnMember?: RemoveFromChatOnMemberPayload; 
+  removeFromChatOnMessage?: RemoveFromChatOnMessagePayload; 
+  removeFromMessageOnMember?: RemoveFromMessageOnMemberPayload; 
+  createUser?: User; 
 }
 
-export interface AllUsersQueryArgs {
-  filter: UserFilter | null;
-  orderBy: UserOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface AddToChatOnMemberPayload {
+  chatsChat?: Chat; 
+  membersMember?: Member; 
 }
 
-export interface AllChatsMetaQueryArgs {
-  filter: ChatFilter | null;
-  orderBy: ChatOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface AddToChatOnMessagePayload {
+  chatChat?: Chat; 
+  messagesMessage?: Message; 
 }
 
-export interface AllFilesMetaQueryArgs {
-  filter: FileFilter | null;
-  orderBy: FileOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface AddToMessageOnMemberPayload {
+  messagesMessage?: Message; 
+  authorMember?: Member; 
 }
 
-export interface AllMembersMetaQueryArgs {
-  filter: MemberFilter | null;
-  orderBy: MemberOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface RemoveFromChatOnMemberPayload {
+  chatsChat?: Chat; 
+  membersMember?: Member; 
 }
 
-export interface AllMessagesMetaQueryArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface RemoveFromChatOnMessagePayload {
+  chatChat?: Chat; 
+  messagesMessage?: Message; 
 }
 
-export interface AllUsersMetaQueryArgs {
-  filter: UserFilter | null;
-  orderBy: UserOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
+export interface RemoveFromMessageOnMemberPayload {
+  messagesMessage?: Message; 
+  authorMember?: Member; 
 }
 
-export interface ChatQueryArgs {
-  id: string | null;
+export interface Subscription {
+  Chat?: ChatSubscriptionPayload; 
+  File?: FileSubscriptionPayload; 
+  Member?: MemberSubscriptionPayload; 
+  Message?: MessageSubscriptionPayload; 
+  User?: UserSubscriptionPayload; 
 }
 
-export interface FileQueryArgs {
-  id: string | null;
-  secret: string | null;
-  url: string | null;
+export interface ChatSubscriptionPayload {
+  mutation: _ModelMutationType; 
+  node?: Chat; 
+  updatedFields: string[]; 
+  previousValues?: ChatPreviousValues; 
 }
 
-export interface MemberQueryArgs {
-  id: string | null;
+export interface ChatPreviousValues {
+  createdAt: DateTime; 
+  id: string; 
+  updatedAt: DateTime; 
 }
 
-export interface MessageQueryArgs {
-  id: string | null;
+export interface FileSubscriptionPayload {
+  mutation: _ModelMutationType; 
+  node?: File; 
+  updatedFields: string[]; 
+  previousValues?: FilePreviousValues; 
 }
 
-export interface UserQueryArgs {
-  id: string | null;
+export interface FilePreviousValues {
+  contentType: string; 
+  createdAt: DateTime; 
+  id: string; 
+  name: string; 
+  secret: string; 
+  size: number; 
+  updatedAt: DateTime; 
+  url: string; 
 }
 
-export interface NodeQueryArgs {
-  id: string;
+export interface MemberSubscriptionPayload {
+  mutation: _ModelMutationType; 
+  node?: Member; 
+  updatedFields: string[]; 
+  previousValues?: MemberPreviousValues; 
+}
+
+export interface MemberPreviousValues {
+  createdAt: DateTime; 
+  id: string; 
+  image: string; 
+  login: string; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  updatedAt: DateTime; 
+}
+
+export interface MessageSubscriptionPayload {
+  mutation: _ModelMutationType; 
+  node?: Message; 
+  updatedFields: string[]; 
+  previousValues?: MessagePreviousValues; 
+}
+
+export interface MessagePreviousValues {
+  content: string; 
+  createdAt: DateTime; 
+  id: string; 
+  updatedAt: DateTime; 
+}
+
+export interface UserSubscriptionPayload {
+  mutation: _ModelMutationType; 
+  node?: User; 
+  updatedFields: string[]; 
+  previousValues?: UserPreviousValues; 
+}
+
+export interface UserPreviousValues {
+  createdAt: DateTime; 
+  id: string; 
+  updatedAt: DateTime; 
 }
 
 export interface ChatFilter {
-  AND: Array<ChatFilter>;
-  OR: Array<ChatFilter>;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  members_every: MemberFilter | null;
-  members_some: MemberFilter | null;
-  members_none: MemberFilter | null;
-  messages_every: MessageFilter | null;
-  messages_some: MessageFilter | null;
-  messages_none: MessageFilter | null;
+  AND: ChatFilter[]; /* Logical AND on all given filters. */
+  OR: ChatFilter[]; /* Logical OR on all given filters. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  members_every?: MemberFilter; 
+  members_some?: MemberFilter; 
+  members_none?: MemberFilter; 
+  messages_every?: MessageFilter; 
+  messages_some?: MessageFilter; 
+  messages_none?: MessageFilter; 
 }
 
-export type DateTime = any;
-
 export interface MemberFilter {
-  AND: Array<MemberFilter>;
-  OR: Array<MemberFilter>;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  name: string | null;
-  name_not: string | null;
-  name_in: Array<string>;
-  name_not_in: Array<string>;
-  name_lt: string | null;
-  name_lte: string | null;
-  name_gt: string | null;
-  name_gte: string | null;
-  name_contains: string | null;
-  name_not_contains: string | null;
-  name_starts_with: string | null;
-  name_not_starts_with: string | null;
-  name_ends_with: string | null;
-  name_not_ends_with: string | null;
-  title: string | null;
-  title_not: string | null;
-  title_in: Array<string>;
-  title_not_in: Array<string>;
-  title_lt: string | null;
-  title_lte: string | null;
-  title_gt: string | null;
-  title_gte: string | null;
-  title_contains: string | null;
-  title_not_contains: string | null;
-  title_starts_with: string | null;
-  title_not_starts_with: string | null;
-  title_ends_with: string | null;
-  title_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  chats_every: ChatFilter | null;
-  chats_some: ChatFilter | null;
-  chats_none: ChatFilter | null;
-  messages_every: MessageFilter | null;
-  messages_some: MessageFilter | null;
-  messages_none: MessageFilter | null;
+  AND: MemberFilter[]; /* Logical AND on all given filters. */
+  OR: MemberFilter[]; /* Logical OR on all given filters. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  image?: string; 
+  image_not?: string; /* All values that are not equal to given value. */
+  image_in: string[]; /* All values that are contained in given list. */
+  image_not_in: string[]; /* All values that are not contained in given list. */
+  image_lt?: string; /* All values less than the given value. */
+  image_lte?: string; /* All values less than or equal the given value. */
+  image_gt?: string; /* All values greater than the given value. */
+  image_gte?: string; /* All values greater than or equal the given value. */
+  image_contains?: string; /* All values containing the given string. */
+  image_not_contains?: string; /* All values not containing the given string. */
+  image_starts_with?: string; /* All values starting with the given string. */
+  image_not_starts_with?: string; /* All values not starting with the given string. */
+  image_ends_with?: string; /* All values ending with the given string. */
+  image_not_ends_with?: string; /* All values not ending with the given string. */
+  login?: string; 
+  login_not?: string; /* All values that are not equal to given value. */
+  login_in: string[]; /* All values that are contained in given list. */
+  login_not_in: string[]; /* All values that are not contained in given list. */
+  login_lt?: string; /* All values less than the given value. */
+  login_lte?: string; /* All values less than or equal the given value. */
+  login_gt?: string; /* All values greater than the given value. */
+  login_gte?: string; /* All values greater than or equal the given value. */
+  login_contains?: string; /* All values containing the given string. */
+  login_not_contains?: string; /* All values not containing the given string. */
+  login_starts_with?: string; /* All values starting with the given string. */
+  login_not_starts_with?: string; /* All values not starting with the given string. */
+  login_ends_with?: string; /* All values ending with the given string. */
+  login_not_ends_with?: string; /* All values not ending with the given string. */
+  name?: string; 
+  name_not?: string; /* All values that are not equal to given value. */
+  name_in: string[]; /* All values that are contained in given list. */
+  name_not_in: string[]; /* All values that are not contained in given list. */
+  name_lt?: string; /* All values less than the given value. */
+  name_lte?: string; /* All values less than or equal the given value. */
+  name_gt?: string; /* All values greater than the given value. */
+  name_gte?: string; /* All values greater than or equal the given value. */
+  name_contains?: string; /* All values containing the given string. */
+  name_not_contains?: string; /* All values not containing the given string. */
+  name_starts_with?: string; /* All values starting with the given string. */
+  name_not_starts_with?: string; /* All values not starting with the given string. */
+  name_ends_with?: string; /* All values ending with the given string. */
+  name_not_ends_with?: string; /* All values not ending with the given string. */
+  title?: string; 
+  title_not?: string; /* All values that are not equal to given value. */
+  title_in: string[]; /* All values that are contained in given list. */
+  title_not_in: string[]; /* All values that are not contained in given list. */
+  title_lt?: string; /* All values less than the given value. */
+  title_lte?: string; /* All values less than or equal the given value. */
+  title_gt?: string; /* All values greater than the given value. */
+  title_gte?: string; /* All values greater than or equal the given value. */
+  title_contains?: string; /* All values containing the given string. */
+  title_not_contains?: string; /* All values not containing the given string. */
+  title_starts_with?: string; /* All values starting with the given string. */
+  title_not_starts_with?: string; /* All values not starting with the given string. */
+  title_ends_with?: string; /* All values ending with the given string. */
+  title_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  chats_every?: ChatFilter; 
+  chats_some?: ChatFilter; 
+  chats_none?: ChatFilter; 
+  messages_every?: MessageFilter; 
+  messages_some?: MessageFilter; 
+  messages_none?: MessageFilter; 
 }
 
 export interface MessageFilter {
-  AND: Array<MessageFilter>;
-  OR: Array<MessageFilter>;
-  content: string | null;
-  content_not: string | null;
-  content_in: Array<string>;
-  content_not_in: Array<string>;
-  content_lt: string | null;
-  content_lte: string | null;
-  content_gt: string | null;
-  content_gte: string | null;
-  content_contains: string | null;
-  content_not_contains: string | null;
-  content_starts_with: string | null;
-  content_not_starts_with: string | null;
-  content_ends_with: string | null;
-  content_not_ends_with: string | null;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  author: MemberFilter | null;
-  chat: ChatFilter | null;
+  AND: MessageFilter[]; /* Logical AND on all given filters. */
+  OR: MessageFilter[]; /* Logical OR on all given filters. */
+  content?: string; 
+  content_not?: string; /* All values that are not equal to given value. */
+  content_in: string[]; /* All values that are contained in given list. */
+  content_not_in: string[]; /* All values that are not contained in given list. */
+  content_lt?: string; /* All values less than the given value. */
+  content_lte?: string; /* All values less than or equal the given value. */
+  content_gt?: string; /* All values greater than the given value. */
+  content_gte?: string; /* All values greater than or equal the given value. */
+  content_contains?: string; /* All values containing the given string. */
+  content_not_contains?: string; /* All values not containing the given string. */
+  content_starts_with?: string; /* All values starting with the given string. */
+  content_not_starts_with?: string; /* All values not starting with the given string. */
+  content_ends_with?: string; /* All values ending with the given string. */
+  content_not_ends_with?: string; /* All values not ending with the given string. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  author?: MemberFilter; 
+  chat?: ChatFilter; 
+}
+
+export interface FileFilter {
+  AND: FileFilter[]; /* Logical AND on all given filters. */
+  OR: FileFilter[]; /* Logical OR on all given filters. */
+  contentType?: string; 
+  contentType_not?: string; /* All values that are not equal to given value. */
+  contentType_in: string[]; /* All values that are contained in given list. */
+  contentType_not_in: string[]; /* All values that are not contained in given list. */
+  contentType_lt?: string; /* All values less than the given value. */
+  contentType_lte?: string; /* All values less than or equal the given value. */
+  contentType_gt?: string; /* All values greater than the given value. */
+  contentType_gte?: string; /* All values greater than or equal the given value. */
+  contentType_contains?: string; /* All values containing the given string. */
+  contentType_not_contains?: string; /* All values not containing the given string. */
+  contentType_starts_with?: string; /* All values starting with the given string. */
+  contentType_not_starts_with?: string; /* All values not starting with the given string. */
+  contentType_ends_with?: string; /* All values ending with the given string. */
+  contentType_not_ends_with?: string; /* All values not ending with the given string. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  name?: string; 
+  name_not?: string; /* All values that are not equal to given value. */
+  name_in: string[]; /* All values that are contained in given list. */
+  name_not_in: string[]; /* All values that are not contained in given list. */
+  name_lt?: string; /* All values less than the given value. */
+  name_lte?: string; /* All values less than or equal the given value. */
+  name_gt?: string; /* All values greater than the given value. */
+  name_gte?: string; /* All values greater than or equal the given value. */
+  name_contains?: string; /* All values containing the given string. */
+  name_not_contains?: string; /* All values not containing the given string. */
+  name_starts_with?: string; /* All values starting with the given string. */
+  name_not_starts_with?: string; /* All values not starting with the given string. */
+  name_ends_with?: string; /* All values ending with the given string. */
+  name_not_ends_with?: string; /* All values not ending with the given string. */
+  secret?: string; 
+  secret_not?: string; /* All values that are not equal to given value. */
+  secret_in: string[]; /* All values that are contained in given list. */
+  secret_not_in: string[]; /* All values that are not contained in given list. */
+  secret_lt?: string; /* All values less than the given value. */
+  secret_lte?: string; /* All values less than or equal the given value. */
+  secret_gt?: string; /* All values greater than the given value. */
+  secret_gte?: string; /* All values greater than or equal the given value. */
+  secret_contains?: string; /* All values containing the given string. */
+  secret_not_contains?: string; /* All values not containing the given string. */
+  secret_starts_with?: string; /* All values starting with the given string. */
+  secret_not_starts_with?: string; /* All values not starting with the given string. */
+  secret_ends_with?: string; /* All values ending with the given string. */
+  secret_not_ends_with?: string; /* All values not ending with the given string. */
+  size?: number; 
+  size_not?: number; /* All values that are not equal to given value. */
+  size_in: number[]; /* All values that are contained in given list. */
+  size_not_in: number[]; /* All values that are not contained in given list. */
+  size_lt?: number; /* All values less than the given value. */
+  size_lte?: number; /* All values less than or equal the given value. */
+  size_gt?: number; /* All values greater than the given value. */
+  size_gte?: number; /* All values greater than or equal the given value. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  url?: string; 
+  url_not?: string; /* All values that are not equal to given value. */
+  url_in: string[]; /* All values that are contained in given list. */
+  url_not_in: string[]; /* All values that are not contained in given list. */
+  url_lt?: string; /* All values less than the given value. */
+  url_lte?: string; /* All values less than or equal the given value. */
+  url_gt?: string; /* All values greater than the given value. */
+  url_gte?: string; /* All values greater than or equal the given value. */
+  url_contains?: string; /* All values containing the given string. */
+  url_not_contains?: string; /* All values not containing the given string. */
+  url_starts_with?: string; /* All values starting with the given string. */
+  url_not_starts_with?: string; /* All values not starting with the given string. */
+  url_ends_with?: string; /* All values ending with the given string. */
+  url_not_ends_with?: string; /* All values not ending with the given string. */
+}
+
+export interface UserFilter {
+  AND: UserFilter[]; /* Logical AND on all given filters. */
+  OR: UserFilter[]; /* Logical OR on all given filters. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+}
+
+export interface ChatmembersMember {
+  image: string; 
+  login?: string; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+
+export interface MemberchatsChat {
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+
+export interface ChatmessagesMessage {
+  content: string; 
+  authorId?: string; 
+  author?: MessageauthorMember; 
+}
+
+export interface MessageauthorMember {
+  image: string; 
+  login?: string; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+
+export interface MembermessagesMessage {
+  content: string; 
+  chatId?: string; 
+  chat?: MessagechatChat; 
+}
+
+export interface MessagechatChat {
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+
+export interface UpdateChat {
+  id: string; 
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+
+export interface CreateChat {
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+
+export interface UpdateFile {
+  id: string; 
+  name?: string; 
+}
+
+export interface CreateFile {
+  name: string; 
+}
+
+export interface UpdateMember {
+  id: string; 
+  image?: string; 
+  login?: string; 
+  name?: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+
+export interface CreateMember {
+  image: string; 
+  login?: string; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+
+export interface UpdateMessage {
+  content?: string; 
+  id: string; 
+  authorId?: string; 
+  author?: MessageauthorMember; 
+  chatId?: string; 
+  chat?: MessagechatChat; 
+}
+
+export interface CreateMessage {
+  content: string; 
+  authorId?: string; 
+  author?: MessageauthorMember; 
+  chatId?: string; 
+  chat?: MessagechatChat; 
+}
+
+export interface UpdateUser {
+  id: string; 
+}
+
+export interface ChatSubscriptionFilter {
+  AND: ChatSubscriptionFilter[]; /* Logical AND on all given filters. */
+  OR: ChatSubscriptionFilter[]; /* Logical OR on all given filters. */
+  mutation_in: _ModelMutationType[]; /* The subscription event gets dispatched when it&#x27;s listed in mutation_in */
+  updatedFields_contains?: string; /* The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains_every: string[]; /* The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_some: string[]; /* The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  node?: ChatSubscriptionFilterNode; 
+}
+
+export interface ChatSubscriptionFilterNode {
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  members_every?: MemberFilter; 
+  members_some?: MemberFilter; 
+  members_none?: MemberFilter; 
+  messages_every?: MessageFilter; 
+  messages_some?: MessageFilter; 
+  messages_none?: MessageFilter; 
+}
+
+export interface FileSubscriptionFilter {
+  AND: FileSubscriptionFilter[]; /* Logical AND on all given filters. */
+  OR: FileSubscriptionFilter[]; /* Logical OR on all given filters. */
+  mutation_in: _ModelMutationType[]; /* The subscription event gets dispatched when it&#x27;s listed in mutation_in */
+  updatedFields_contains?: string; /* The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains_every: string[]; /* The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_some: string[]; /* The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  node?: FileSubscriptionFilterNode; 
+}
+
+export interface FileSubscriptionFilterNode {
+  contentType?: string; 
+  contentType_not?: string; /* All values that are not equal to given value. */
+  contentType_in: string[]; /* All values that are contained in given list. */
+  contentType_not_in: string[]; /* All values that are not contained in given list. */
+  contentType_lt?: string; /* All values less than the given value. */
+  contentType_lte?: string; /* All values less than or equal the given value. */
+  contentType_gt?: string; /* All values greater than the given value. */
+  contentType_gte?: string; /* All values greater than or equal the given value. */
+  contentType_contains?: string; /* All values containing the given string. */
+  contentType_not_contains?: string; /* All values not containing the given string. */
+  contentType_starts_with?: string; /* All values starting with the given string. */
+  contentType_not_starts_with?: string; /* All values not starting with the given string. */
+  contentType_ends_with?: string; /* All values ending with the given string. */
+  contentType_not_ends_with?: string; /* All values not ending with the given string. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  name?: string; 
+  name_not?: string; /* All values that are not equal to given value. */
+  name_in: string[]; /* All values that are contained in given list. */
+  name_not_in: string[]; /* All values that are not contained in given list. */
+  name_lt?: string; /* All values less than the given value. */
+  name_lte?: string; /* All values less than or equal the given value. */
+  name_gt?: string; /* All values greater than the given value. */
+  name_gte?: string; /* All values greater than or equal the given value. */
+  name_contains?: string; /* All values containing the given string. */
+  name_not_contains?: string; /* All values not containing the given string. */
+  name_starts_with?: string; /* All values starting with the given string. */
+  name_not_starts_with?: string; /* All values not starting with the given string. */
+  name_ends_with?: string; /* All values ending with the given string. */
+  name_not_ends_with?: string; /* All values not ending with the given string. */
+  secret?: string; 
+  secret_not?: string; /* All values that are not equal to given value. */
+  secret_in: string[]; /* All values that are contained in given list. */
+  secret_not_in: string[]; /* All values that are not contained in given list. */
+  secret_lt?: string; /* All values less than the given value. */
+  secret_lte?: string; /* All values less than or equal the given value. */
+  secret_gt?: string; /* All values greater than the given value. */
+  secret_gte?: string; /* All values greater than or equal the given value. */
+  secret_contains?: string; /* All values containing the given string. */
+  secret_not_contains?: string; /* All values not containing the given string. */
+  secret_starts_with?: string; /* All values starting with the given string. */
+  secret_not_starts_with?: string; /* All values not starting with the given string. */
+  secret_ends_with?: string; /* All values ending with the given string. */
+  secret_not_ends_with?: string; /* All values not ending with the given string. */
+  size?: number; 
+  size_not?: number; /* All values that are not equal to given value. */
+  size_in: number[]; /* All values that are contained in given list. */
+  size_not_in: number[]; /* All values that are not contained in given list. */
+  size_lt?: number; /* All values less than the given value. */
+  size_lte?: number; /* All values less than or equal the given value. */
+  size_gt?: number; /* All values greater than the given value. */
+  size_gte?: number; /* All values greater than or equal the given value. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  url?: string; 
+  url_not?: string; /* All values that are not equal to given value. */
+  url_in: string[]; /* All values that are contained in given list. */
+  url_not_in: string[]; /* All values that are not contained in given list. */
+  url_lt?: string; /* All values less than the given value. */
+  url_lte?: string; /* All values less than or equal the given value. */
+  url_gt?: string; /* All values greater than the given value. */
+  url_gte?: string; /* All values greater than or equal the given value. */
+  url_contains?: string; /* All values containing the given string. */
+  url_not_contains?: string; /* All values not containing the given string. */
+  url_starts_with?: string; /* All values starting with the given string. */
+  url_not_starts_with?: string; /* All values not starting with the given string. */
+  url_ends_with?: string; /* All values ending with the given string. */
+  url_not_ends_with?: string; /* All values not ending with the given string. */
+}
+
+export interface MemberSubscriptionFilter {
+  AND: MemberSubscriptionFilter[]; /* Logical AND on all given filters. */
+  OR: MemberSubscriptionFilter[]; /* Logical OR on all given filters. */
+  mutation_in: _ModelMutationType[]; /* The subscription event gets dispatched when it&#x27;s listed in mutation_in */
+  updatedFields_contains?: string; /* The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains_every: string[]; /* The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_some: string[]; /* The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  node?: MemberSubscriptionFilterNode; 
+}
+
+export interface MemberSubscriptionFilterNode {
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  image?: string; 
+  image_not?: string; /* All values that are not equal to given value. */
+  image_in: string[]; /* All values that are contained in given list. */
+  image_not_in: string[]; /* All values that are not contained in given list. */
+  image_lt?: string; /* All values less than the given value. */
+  image_lte?: string; /* All values less than or equal the given value. */
+  image_gt?: string; /* All values greater than the given value. */
+  image_gte?: string; /* All values greater than or equal the given value. */
+  image_contains?: string; /* All values containing the given string. */
+  image_not_contains?: string; /* All values not containing the given string. */
+  image_starts_with?: string; /* All values starting with the given string. */
+  image_not_starts_with?: string; /* All values not starting with the given string. */
+  image_ends_with?: string; /* All values ending with the given string. */
+  image_not_ends_with?: string; /* All values not ending with the given string. */
+  login?: string; 
+  login_not?: string; /* All values that are not equal to given value. */
+  login_in: string[]; /* All values that are contained in given list. */
+  login_not_in: string[]; /* All values that are not contained in given list. */
+  login_lt?: string; /* All values less than the given value. */
+  login_lte?: string; /* All values less than or equal the given value. */
+  login_gt?: string; /* All values greater than the given value. */
+  login_gte?: string; /* All values greater than or equal the given value. */
+  login_contains?: string; /* All values containing the given string. */
+  login_not_contains?: string; /* All values not containing the given string. */
+  login_starts_with?: string; /* All values starting with the given string. */
+  login_not_starts_with?: string; /* All values not starting with the given string. */
+  login_ends_with?: string; /* All values ending with the given string. */
+  login_not_ends_with?: string; /* All values not ending with the given string. */
+  name?: string; 
+  name_not?: string; /* All values that are not equal to given value. */
+  name_in: string[]; /* All values that are contained in given list. */
+  name_not_in: string[]; /* All values that are not contained in given list. */
+  name_lt?: string; /* All values less than the given value. */
+  name_lte?: string; /* All values less than or equal the given value. */
+  name_gt?: string; /* All values greater than the given value. */
+  name_gte?: string; /* All values greater than or equal the given value. */
+  name_contains?: string; /* All values containing the given string. */
+  name_not_contains?: string; /* All values not containing the given string. */
+  name_starts_with?: string; /* All values starting with the given string. */
+  name_not_starts_with?: string; /* All values not starting with the given string. */
+  name_ends_with?: string; /* All values ending with the given string. */
+  name_not_ends_with?: string; /* All values not ending with the given string. */
+  title?: string; 
+  title_not?: string; /* All values that are not equal to given value. */
+  title_in: string[]; /* All values that are contained in given list. */
+  title_not_in: string[]; /* All values that are not contained in given list. */
+  title_lt?: string; /* All values less than the given value. */
+  title_lte?: string; /* All values less than or equal the given value. */
+  title_gt?: string; /* All values greater than the given value. */
+  title_gte?: string; /* All values greater than or equal the given value. */
+  title_contains?: string; /* All values containing the given string. */
+  title_not_contains?: string; /* All values not containing the given string. */
+  title_starts_with?: string; /* All values starting with the given string. */
+  title_not_starts_with?: string; /* All values not starting with the given string. */
+  title_ends_with?: string; /* All values ending with the given string. */
+  title_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  chats_every?: ChatFilter; 
+  chats_some?: ChatFilter; 
+  chats_none?: ChatFilter; 
+  messages_every?: MessageFilter; 
+  messages_some?: MessageFilter; 
+  messages_none?: MessageFilter; 
+}
+
+export interface MessageSubscriptionFilter {
+  AND: MessageSubscriptionFilter[]; /* Logical AND on all given filters. */
+  OR: MessageSubscriptionFilter[]; /* Logical OR on all given filters. */
+  mutation_in: _ModelMutationType[]; /* The subscription event gets dispatched when it&#x27;s listed in mutation_in */
+  updatedFields_contains?: string; /* The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains_every: string[]; /* The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_some: string[]; /* The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  node?: MessageSubscriptionFilterNode; 
+}
+
+export interface MessageSubscriptionFilterNode {
+  content?: string; 
+  content_not?: string; /* All values that are not equal to given value. */
+  content_in: string[]; /* All values that are contained in given list. */
+  content_not_in: string[]; /* All values that are not contained in given list. */
+  content_lt?: string; /* All values less than the given value. */
+  content_lte?: string; /* All values less than or equal the given value. */
+  content_gt?: string; /* All values greater than the given value. */
+  content_gte?: string; /* All values greater than or equal the given value. */
+  content_contains?: string; /* All values containing the given string. */
+  content_not_contains?: string; /* All values not containing the given string. */
+  content_starts_with?: string; /* All values starting with the given string. */
+  content_not_starts_with?: string; /* All values not starting with the given string. */
+  content_ends_with?: string; /* All values ending with the given string. */
+  content_not_ends_with?: string; /* All values not ending with the given string. */
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  author?: MemberFilter; 
+  chat?: ChatFilter; 
+}
+
+export interface UserSubscriptionFilter {
+  AND: UserSubscriptionFilter[]; /* Logical AND on all given filters. */
+  OR: UserSubscriptionFilter[]; /* Logical OR on all given filters. */
+  mutation_in: _ModelMutationType[]; /* The subscription event gets dispatched when it&#x27;s listed in mutation_in */
+  updatedFields_contains?: string; /* The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains_every: string[]; /* The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_some: string[]; /* The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  node?: UserSubscriptionFilterNode; 
+}
+
+export interface UserSubscriptionFilterNode {
+  createdAt?: DateTime; 
+  createdAt_not?: DateTime; /* All values that are not equal to given value. */
+  createdAt_in: DateTime[]; /* All values that are contained in given list. */
+  createdAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  createdAt_lt?: DateTime; /* All values less than the given value. */
+  createdAt_lte?: DateTime; /* All values less than or equal the given value. */
+  createdAt_gt?: DateTime; /* All values greater than the given value. */
+  createdAt_gte?: DateTime; /* All values greater than or equal the given value. */
+  id?: string; 
+  id_not?: string; /* All values that are not equal to given value. */
+  id_in: string[]; /* All values that are contained in given list. */
+  id_not_in: string[]; /* All values that are not contained in given list. */
+  id_lt?: string; /* All values less than the given value. */
+  id_lte?: string; /* All values less than or equal the given value. */
+  id_gt?: string; /* All values greater than the given value. */
+  id_gte?: string; /* All values greater than or equal the given value. */
+  id_contains?: string; /* All values containing the given string. */
+  id_not_contains?: string; /* All values not containing the given string. */
+  id_starts_with?: string; /* All values starting with the given string. */
+  id_not_starts_with?: string; /* All values not starting with the given string. */
+  id_ends_with?: string; /* All values ending with the given string. */
+  id_not_ends_with?: string; /* All values not ending with the given string. */
+  updatedAt?: DateTime; 
+  updatedAt_not?: DateTime; /* All values that are not equal to given value. */
+  updatedAt_in: DateTime[]; /* All values that are contained in given list. */
+  updatedAt_not_in: DateTime[]; /* All values that are not contained in given list. */
+  updatedAt_lt?: DateTime; /* All values less than the given value. */
+  updatedAt_lte?: DateTime; /* All values less than or equal the given value. */
+  updatedAt_gt?: DateTime; /* All values greater than the given value. */
+  updatedAt_gte?: DateTime; /* All values greater than or equal the given value. */
+}
+export interface AllChatsQueryArgs {
+  filter?: ChatFilter; 
+  orderBy?: ChatOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllFilesQueryArgs {
+  filter?: FileFilter; 
+  orderBy?: FileOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllMembersQueryArgs {
+  filter?: MemberFilter; 
+  orderBy?: MemberOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllMessagesQueryArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllUsersQueryArgs {
+  filter?: UserFilter; 
+  orderBy?: UserOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllChatsMetaQueryArgs {
+  filter?: ChatFilter; 
+  orderBy?: ChatOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllFilesMetaQueryArgs {
+  filter?: FileFilter; 
+  orderBy?: FileOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllMembersMetaQueryArgs {
+  filter?: MemberFilter; 
+  orderBy?: MemberOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllMessagesMetaQueryArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AllUsersMetaQueryArgs {
+  filter?: UserFilter; 
+  orderBy?: UserOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface ChatQueryArgs {
+  id?: string; 
+}
+export interface FileQueryArgs {
+  id?: string; 
+  secret?: string; 
+  url?: string; 
+}
+export interface MemberQueryArgs {
+  id?: string; 
+}
+export interface MessageQueryArgs {
+  id?: string; 
+}
+export interface UserQueryArgs {
+  id?: string; 
+}
+export interface NodeQueryArgs {
+  id: string; /* The ID of an object */
+}
+export interface MembersChatArgs {
+  filter?: MemberFilter; 
+  orderBy?: MemberOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface MessagesChatArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface MembersMetaChatArgs {
+  filter?: MemberFilter; 
+  orderBy?: MemberOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface MessagesMetaChatArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface ChatsMemberArgs {
+  filter?: ChatFilter; 
+  orderBy?: ChatOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface MessagesMemberArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface ChatsMetaMemberArgs {
+  filter?: ChatFilter; 
+  orderBy?: ChatOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface MessagesMetaMemberArgs {
+  filter?: MessageFilter; 
+  orderBy?: MessageOrderBy; 
+  skip?: number; 
+  after?: string; 
+  before?: string; 
+  first?: number; 
+  last?: number; 
+}
+export interface AuthorMessageArgs {
+  filter?: MemberFilter; 
+}
+export interface ChatMessageArgs {
+  filter?: ChatFilter; 
+}
+export interface CreateChatMutationArgs {
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+export interface CreateFileMutationArgs {
+  name: string; 
+}
+export interface CreateMemberMutationArgs {
+  image: string; 
+  login?: string; 
+  name: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+export interface CreateMessageMutationArgs {
+  content: string; 
+  authorId?: string; 
+  author?: MessageauthorMember; 
+  chatId?: string; 
+  chat?: MessagechatChat; 
+}
+export interface UpdateChatMutationArgs {
+  id: string; 
+  membersIds: string[]; 
+  members: ChatmembersMember[]; 
+  messagesIds: string[]; 
+  messages: ChatmessagesMessage[]; 
+}
+export interface UpdateFileMutationArgs {
+  id: string; 
+  name?: string; 
+}
+export interface UpdateMemberMutationArgs {
+  id: string; 
+  image?: string; 
+  login?: string; 
+  name?: string; /* Firstname + Lastname */
+  title?: string; /* Short info about a user */
+  chatsIds: string[]; 
+  chats: MemberchatsChat[]; 
+  messagesIds: string[]; 
+  messages: MembermessagesMessage[]; 
+}
+export interface UpdateMessageMutationArgs {
+  content?: string; 
+  id: string; 
+  authorId?: string; 
+  author?: MessageauthorMember; 
+  chatId?: string; 
+  chat?: MessagechatChat; 
+}
+export interface UpdateUserMutationArgs {
+  id: string; 
+}
+export interface UpdateOrCreateChatMutationArgs {
+  update: UpdateChat; 
+  create: CreateChat; 
+}
+export interface UpdateOrCreateFileMutationArgs {
+  update: UpdateFile; 
+  create: CreateFile; 
+}
+export interface UpdateOrCreateMemberMutationArgs {
+  update: UpdateMember; 
+  create: CreateMember; 
+}
+export interface UpdateOrCreateMessageMutationArgs {
+  update: UpdateMessage; 
+  create: CreateMessage; 
+}
+export interface UpdateOrCreateUserMutationArgs {
+  update: UpdateUser; 
+}
+export interface DeleteChatMutationArgs {
+  id: string; 
+}
+export interface DeleteFileMutationArgs {
+  id: string; 
+}
+export interface DeleteMemberMutationArgs {
+  id: string; 
+}
+export interface DeleteMessageMutationArgs {
+  id: string; 
+}
+export interface DeleteUserMutationArgs {
+  id: string; 
+}
+export interface AddToChatOnMemberMutationArgs {
+  membersMemberId: string; 
+  chatsChatId: string; 
+}
+export interface AddToChatOnMessageMutationArgs {
+  messagesMessageId: string; 
+  chatChatId: string; 
+}
+export interface AddToMessageOnMemberMutationArgs {
+  authorMemberId: string; 
+  messagesMessageId: string; 
+}
+export interface RemoveFromChatOnMemberMutationArgs {
+  membersMemberId: string; 
+  chatsChatId: string; 
+}
+export interface RemoveFromChatOnMessageMutationArgs {
+  messagesMessageId: string; 
+  chatChatId: string; 
+}
+export interface RemoveFromMessageOnMemberMutationArgs {
+  authorMemberId: string; 
+  messagesMessageId: string; 
+}
+export interface ChatSubscriptionArgs {
+  filter?: ChatSubscriptionFilter; 
+}
+export interface FileSubscriptionArgs {
+  filter?: FileSubscriptionFilter; 
+}
+export interface MemberSubscriptionArgs {
+  filter?: MemberSubscriptionFilter; 
+}
+export interface MessageSubscriptionArgs {
+  filter?: MessageSubscriptionFilter; 
+}
+export interface UserSubscriptionArgs {
+  filter?: UserSubscriptionFilter; 
 }
 
 export type ChatOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
 
-export interface Chat extends Node {
-  createdAt: DateTime;
-  id: string;
-  members: Array<Member>;
-  messages: Array<Message>;
-  updatedAt: DateTime;
-  _membersMeta: _QueryMeta;
-  _messagesMeta: _QueryMeta;
-}
 
-export interface MembersChatArgs {
-  filter: MemberFilter | null;
-  orderBy: MemberOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
+export type MemberOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "image_ASC" | "image_DESC" | "login_ASC" | "login_DESC" | "name_ASC" | "name_DESC" | "title_ASC" | "title_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
 
-export interface MessagesChatArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface MembersMetaChatArgs {
-  filter: MemberFilter | null;
-  orderBy: MemberOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface MessagesMetaChatArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface Node {
-  id: string;
-}
-
-export type MemberOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC" | "title_ASC" | "title_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
-
-export interface Member extends Node {
-  chats: Array<Chat>;
-  createdAt: DateTime;
-  id: string;
-  messages: Array<Message>;
-  name: string;
-  title: string | null;
-  updatedAt: DateTime;
-  _chatsMeta: _QueryMeta;
-  _messagesMeta: _QueryMeta;
-}
-
-export interface ChatsMemberArgs {
-  filter: ChatFilter | null;
-  orderBy: ChatOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface MessagesMemberArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface ChatsMetaMemberArgs {
-  filter: ChatFilter | null;
-  orderBy: ChatOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
-
-export interface MessagesMetaMemberArgs {
-  filter: MessageFilter | null;
-  orderBy: MessageOrderBy | null;
-  skip: number | null;
-  after: string | null;
-  before: string | null;
-  first: number | null;
-  last: number | null;
-}
 
 export type MessageOrderBy = "content_ASC" | "content_DESC" | "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
 
-export interface Message extends Node {
-  author: Member | null;
-  chat: Chat | null;
-  content: string;
-  createdAt: DateTime;
-  id: string;
-  updatedAt: DateTime;
-}
-
-export interface AuthorMessageArgs {
-  filter: MemberFilter | null;
-}
-
-export interface ChatMessageArgs {
-  filter: ChatFilter | null;
-}
-
-export interface _QueryMeta {
-  count: number;
-}
-
-export interface FileFilter {
-  AND: Array<FileFilter>;
-  OR: Array<FileFilter>;
-  contentType: string | null;
-  contentType_not: string | null;
-  contentType_in: Array<string>;
-  contentType_not_in: Array<string>;
-  contentType_lt: string | null;
-  contentType_lte: string | null;
-  contentType_gt: string | null;
-  contentType_gte: string | null;
-  contentType_contains: string | null;
-  contentType_not_contains: string | null;
-  contentType_starts_with: string | null;
-  contentType_not_starts_with: string | null;
-  contentType_ends_with: string | null;
-  contentType_not_ends_with: string | null;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  name: string | null;
-  name_not: string | null;
-  name_in: Array<string>;
-  name_not_in: Array<string>;
-  name_lt: string | null;
-  name_lte: string | null;
-  name_gt: string | null;
-  name_gte: string | null;
-  name_contains: string | null;
-  name_not_contains: string | null;
-  name_starts_with: string | null;
-  name_not_starts_with: string | null;
-  name_ends_with: string | null;
-  name_not_ends_with: string | null;
-  secret: string | null;
-  secret_not: string | null;
-  secret_in: Array<string>;
-  secret_not_in: Array<string>;
-  secret_lt: string | null;
-  secret_lte: string | null;
-  secret_gt: string | null;
-  secret_gte: string | null;
-  secret_contains: string | null;
-  secret_not_contains: string | null;
-  secret_starts_with: string | null;
-  secret_not_starts_with: string | null;
-  secret_ends_with: string | null;
-  secret_not_ends_with: string | null;
-  size: number | null;
-  size_not: number | null;
-  size_in: Array<number>;
-  size_not_in: Array<number>;
-  size_lt: number | null;
-  size_lte: number | null;
-  size_gt: number | null;
-  size_gte: number | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  url: string | null;
-  url_not: string | null;
-  url_in: Array<string>;
-  url_not_in: Array<string>;
-  url_lt: string | null;
-  url_lte: string | null;
-  url_gt: string | null;
-  url_gte: string | null;
-  url_contains: string | null;
-  url_not_contains: string | null;
-  url_starts_with: string | null;
-  url_not_starts_with: string | null;
-  url_ends_with: string | null;
-  url_not_ends_with: string | null;
-}
 
 export type FileOrderBy = "contentType_ASC" | "contentType_DESC" | "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC" | "secret_ASC" | "secret_DESC" | "size_ASC" | "size_DESC" | "updatedAt_ASC" | "updatedAt_DESC" | "url_ASC" | "url_DESC";
 
-export interface File extends Node {
-  contentType: string;
-  createdAt: DateTime;
-  id: string;
-  name: string;
-  secret: string;
-  size: number;
-  updatedAt: DateTime;
-  url: string;
-}
-
-export interface UserFilter {
-  AND: Array<UserFilter>;
-  OR: Array<UserFilter>;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-}
 
 export type UserOrderBy = "createdAt_ASC" | "createdAt_DESC" | "id_ASC" | "id_DESC" | "updatedAt_ASC" | "updatedAt_DESC";
 
-export interface User extends Node {
-  createdAt: DateTime;
-  id: string;
-  updatedAt: DateTime;
-}
-
-export interface Mutation {
-  createChat: Chat | null;
-  createFile: File | null;
-  createMember: Member | null;
-  createMessage: Message | null;
-  updateChat: Chat | null;
-  updateFile: File | null;
-  updateMember: Member | null;
-  updateMessage: Message | null;
-  updateUser: User | null;
-  updateOrCreateChat: Chat | null;
-  updateOrCreateFile: File | null;
-  updateOrCreateMember: Member | null;
-  updateOrCreateMessage: Message | null;
-  updateOrCreateUser: User | null;
-  deleteChat: Chat | null;
-  deleteFile: File | null;
-  deleteMember: Member | null;
-  deleteMessage: Message | null;
-  deleteUser: User | null;
-  addToChatOnMember: AddToChatOnMemberPayload | null;
-  addToChatOnMessage: AddToChatOnMessagePayload | null;
-  addToMessageOnMember: AddToMessageOnMemberPayload | null;
-  removeFromChatOnMember: RemoveFromChatOnMemberPayload | null;
-  removeFromChatOnMessage: RemoveFromChatOnMessagePayload | null;
-  removeFromMessageOnMember: RemoveFromMessageOnMemberPayload | null;
-  createUser: User | null;
-}
-
-export interface CreateChatMutationArgs {
-  membersIds: Array<string>;
-  members: Array<ChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmessagesMessage>;
-}
-
-export interface CreateFileMutationArgs {
-  name: string;
-}
-
-export interface CreateMemberMutationArgs {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MembermessagesMessage>;
-}
-
-export interface CreateMessageMutationArgs {
-  content: string;
-  authorId: string | null;
-  author: MessageauthorMember | null;
-  chatId: string | null;
-  chat: MessagechatChat | null;
-}
-
-export interface UpdateChatMutationArgs {
-  id: string;
-  membersIds: Array<string>;
-  members: Array<ChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmessagesMessage>;
-}
-
-export interface UpdateFileMutationArgs {
-  id: string;
-  name: string | null;
-}
-
-export interface UpdateMemberMutationArgs {
-  id: string;
-  name: string | null;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MembermessagesMessage>;
-}
-
-export interface UpdateMessageMutationArgs {
-  content: string | null;
-  id: string;
-  authorId: string | null;
-  author: MessageauthorMember | null;
-  chatId: string | null;
-  chat: MessagechatChat | null;
-}
-
-export interface UpdateUserMutationArgs {
-  id: string;
-}
-
-export interface UpdateOrCreateChatMutationArgs {
-  update: UpdateChat;
-  create: CreateChat;
-}
-
-export interface UpdateOrCreateFileMutationArgs {
-  update: UpdateFile;
-  create: CreateFile;
-}
-
-export interface UpdateOrCreateMemberMutationArgs {
-  update: UpdateMember;
-  create: CreateMember;
-}
-
-export interface UpdateOrCreateMessageMutationArgs {
-  update: UpdateMessage;
-  create: CreateMessage;
-}
-
-export interface UpdateOrCreateUserMutationArgs {
-  update: UpdateUser;
-}
-
-export interface DeleteChatMutationArgs {
-  id: string;
-}
-
-export interface DeleteFileMutationArgs {
-  id: string;
-}
-
-export interface DeleteMemberMutationArgs {
-  id: string;
-}
-
-export interface DeleteMessageMutationArgs {
-  id: string;
-}
-
-export interface DeleteUserMutationArgs {
-  id: string;
-}
-
-export interface AddToChatOnMemberMutationArgs {
-  membersMemberId: string;
-  chatsChatId: string;
-}
-
-export interface AddToChatOnMessageMutationArgs {
-  messagesMessageId: string;
-  chatChatId: string;
-}
-
-export interface AddToMessageOnMemberMutationArgs {
-  authorMemberId: string;
-  messagesMessageId: string;
-}
-
-export interface RemoveFromChatOnMemberMutationArgs {
-  membersMemberId: string;
-  chatsChatId: string;
-}
-
-export interface RemoveFromChatOnMessageMutationArgs {
-  messagesMessageId: string;
-  chatChatId: string;
-}
-
-export interface RemoveFromMessageOnMemberMutationArgs {
-  authorMemberId: string;
-  messagesMessageId: string;
-}
-
-export interface ChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<ChatmembersMemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmembersMembermessagesMessage>;
-}
-
-export interface ChatmembersMemberchatsChat {
-  membersIds: Array<string>;
-  members: Array<ChatmembersMemberchatsChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmembersMemberchatsChatmessagesMessage>;
-}
-
-export interface ChatmembersMemberchatsChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface ChatmembersMemberchatsChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface ChatmembersMembermessagesMessage {
-  content: string;
-  chatId: string | null;
-  chat: ChatmembersMembermessagesMessagechatChat | null;
-}
-
-export interface ChatmembersMembermessagesMessagechatChat {
-  membersIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface ChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  author: ChatmessagesMessageauthorMember | null;
-}
-
-export interface ChatmessagesMessageauthorMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<ChatmessagesMessageauthorMemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmessagesMessageauthorMembermessagesMessage>;
-}
-
-export interface ChatmessagesMessageauthorMemberchatsChat {
-  membersIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface ChatmessagesMessageauthorMembermessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface MemberchatsChat {
-  membersIds: Array<string>;
-  members: Array<MemberchatsChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<MemberchatsChatmessagesMessage>;
-}
-
-export interface MemberchatsChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MemberchatsChatmembersMemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MemberchatsChatmembersMembermessagesMessage>;
-}
-
-export interface MemberchatsChatmembersMemberchatsChat {
-  membersIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MemberchatsChatmembersMembermessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface MemberchatsChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  author: MemberchatsChatmessagesMessageauthorMember | null;
-}
-
-export interface MemberchatsChatmessagesMessageauthorMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MembermessagesMessage {
-  content: string;
-  chatId: string | null;
-  chat: MembermessagesMessagechatChat | null;
-}
-
-export interface MembermessagesMessagechatChat {
-  membersIds: Array<string>;
-  members: Array<MembermessagesMessagechatChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<MembermessagesMessagechatChatmessagesMessage>;
-}
-
-export interface MembermessagesMessagechatChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MembermessagesMessagechatChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface MessageauthorMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MessageauthorMemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MessageauthorMembermessagesMessage>;
-}
-
-export interface MessageauthorMemberchatsChat {
-  membersIds: Array<string>;
-  members: Array<MessageauthorMemberchatsChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<MessageauthorMemberchatsChatmessagesMessage>;
-}
-
-export interface MessageauthorMemberchatsChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MessageauthorMemberchatsChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface MessageauthorMembermessagesMessage {
-  content: string;
-  chatId: string | null;
-  chat: MessageauthorMembermessagesMessagechatChat | null;
-}
-
-export interface MessageauthorMembermessagesMessagechatChat {
-  membersIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MessagechatChat {
-  membersIds: Array<string>;
-  members: Array<MessagechatChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<MessagechatChatmessagesMessage>;
-}
-
-export interface MessagechatChatmembersMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MessagechatChatmembersMemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MessagechatChatmembersMembermessagesMessage>;
-}
-
-export interface MessagechatChatmembersMemberchatsChat {
-  membersIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface MessagechatChatmembersMembermessagesMessage {
-  content: string;
-  authorId: string | null;
-  chatId: string | null;
-}
-
-export interface MessagechatChatmessagesMessage {
-  content: string;
-  authorId: string | null;
-  author: MessagechatChatmessagesMessageauthorMember | null;
-}
-
-export interface MessagechatChatmessagesMessageauthorMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  messagesIds: Array<string>;
-}
-
-export interface UpdateChat {
-  id: string;
-  membersIds: Array<string>;
-  members: Array<ChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmessagesMessage>;
-}
-
-export interface CreateChat {
-  membersIds: Array<string>;
-  members: Array<ChatmembersMember>;
-  messagesIds: Array<string>;
-  messages: Array<ChatmessagesMessage>;
-}
-
-export interface UpdateFile {
-  id: string;
-  name: string | null;
-}
-
-export interface CreateFile {
-  name: string;
-}
-
-export interface UpdateMember {
-  id: string;
-  name: string | null;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MembermessagesMessage>;
-}
-
-export interface CreateMember {
-  name: string;
-  title: string | null;
-  chatsIds: Array<string>;
-  chats: Array<MemberchatsChat>;
-  messagesIds: Array<string>;
-  messages: Array<MembermessagesMessage>;
-}
-
-export interface UpdateMessage {
-  content: string | null;
-  id: string;
-  authorId: string | null;
-  author: MessageauthorMember | null;
-  chatId: string | null;
-  chat: MessagechatChat | null;
-}
-
-export interface CreateMessage {
-  content: string;
-  authorId: string | null;
-  author: MessageauthorMember | null;
-  chatId: string | null;
-  chat: MessagechatChat | null;
-}
-
-export interface UpdateUser {
-  id: string;
-}
-
-export interface AddToChatOnMemberPayload {
-  chatsChat: Chat | null;
-  membersMember: Member | null;
-}
-
-export interface AddToChatOnMessagePayload {
-  chatChat: Chat | null;
-  messagesMessage: Message | null;
-}
-
-export interface AddToMessageOnMemberPayload {
-  messagesMessage: Message | null;
-  authorMember: Member | null;
-}
-
-export interface RemoveFromChatOnMemberPayload {
-  chatsChat: Chat | null;
-  membersMember: Member | null;
-}
-
-export interface RemoveFromChatOnMessagePayload {
-  chatChat: Chat | null;
-  messagesMessage: Message | null;
-}
-
-export interface RemoveFromMessageOnMemberPayload {
-  messagesMessage: Message | null;
-  authorMember: Member | null;
-}
-
-export interface Subscription {
-  Chat: ChatSubscriptionPayload | null;
-  File: FileSubscriptionPayload | null;
-  Member: MemberSubscriptionPayload | null;
-  Message: MessageSubscriptionPayload | null;
-  User: UserSubscriptionPayload | null;
-}
-
-export interface ChatSubscriptionArgs {
-  filter: ChatSubscriptionFilter | null;
-}
-
-export interface FileSubscriptionArgs {
-  filter: FileSubscriptionFilter | null;
-}
-
-export interface MemberSubscriptionArgs {
-  filter: MemberSubscriptionFilter | null;
-}
-
-export interface MessageSubscriptionArgs {
-  filter: MessageSubscriptionFilter | null;
-}
-
-export interface UserSubscriptionArgs {
-  filter: UserSubscriptionFilter | null;
-}
-
-export interface ChatSubscriptionFilter {
-  AND: Array<ChatSubscriptionFilter>;
-  OR: Array<ChatSubscriptionFilter>;
-  mutation_in: Array<_ModelMutationType>;
-  updatedFields_contains: string | null;
-  updatedFields_contains_every: Array<string>;
-  updatedFields_contains_some: Array<string>;
-  node: ChatSubscriptionFilterNode | null;
-}
 
 export type _ModelMutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface ChatSubscriptionFilterNode {
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  members_every: MemberFilter | null;
-  members_some: MemberFilter | null;
-  members_none: MemberFilter | null;
-  messages_every: MessageFilter | null;
-  messages_some: MessageFilter | null;
-  messages_none: MessageFilter | null;
-}
-
-export interface ChatSubscriptionPayload {
-  mutation: _ModelMutationType;
-  node: Chat | null;
-  updatedFields: Array<string>;
-  previousValues: ChatPreviousValues | null;
-}
-
-export interface ChatPreviousValues {
-  createdAt: DateTime;
-  id: string;
-  updatedAt: DateTime;
-}
-
-export interface FileSubscriptionFilter {
-  AND: Array<FileSubscriptionFilter>;
-  OR: Array<FileSubscriptionFilter>;
-  mutation_in: Array<_ModelMutationType>;
-  updatedFields_contains: string | null;
-  updatedFields_contains_every: Array<string>;
-  updatedFields_contains_some: Array<string>;
-  node: FileSubscriptionFilterNode | null;
-}
-
-export interface FileSubscriptionFilterNode {
-  contentType: string | null;
-  contentType_not: string | null;
-  contentType_in: Array<string>;
-  contentType_not_in: Array<string>;
-  contentType_lt: string | null;
-  contentType_lte: string | null;
-  contentType_gt: string | null;
-  contentType_gte: string | null;
-  contentType_contains: string | null;
-  contentType_not_contains: string | null;
-  contentType_starts_with: string | null;
-  contentType_not_starts_with: string | null;
-  contentType_ends_with: string | null;
-  contentType_not_ends_with: string | null;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  name: string | null;
-  name_not: string | null;
-  name_in: Array<string>;
-  name_not_in: Array<string>;
-  name_lt: string | null;
-  name_lte: string | null;
-  name_gt: string | null;
-  name_gte: string | null;
-  name_contains: string | null;
-  name_not_contains: string | null;
-  name_starts_with: string | null;
-  name_not_starts_with: string | null;
-  name_ends_with: string | null;
-  name_not_ends_with: string | null;
-  secret: string | null;
-  secret_not: string | null;
-  secret_in: Array<string>;
-  secret_not_in: Array<string>;
-  secret_lt: string | null;
-  secret_lte: string | null;
-  secret_gt: string | null;
-  secret_gte: string | null;
-  secret_contains: string | null;
-  secret_not_contains: string | null;
-  secret_starts_with: string | null;
-  secret_not_starts_with: string | null;
-  secret_ends_with: string | null;
-  secret_not_ends_with: string | null;
-  size: number | null;
-  size_not: number | null;
-  size_in: Array<number>;
-  size_not_in: Array<number>;
-  size_lt: number | null;
-  size_lte: number | null;
-  size_gt: number | null;
-  size_gte: number | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  url: string | null;
-  url_not: string | null;
-  url_in: Array<string>;
-  url_not_in: Array<string>;
-  url_lt: string | null;
-  url_lte: string | null;
-  url_gt: string | null;
-  url_gte: string | null;
-  url_contains: string | null;
-  url_not_contains: string | null;
-  url_starts_with: string | null;
-  url_not_starts_with: string | null;
-  url_ends_with: string | null;
-  url_not_ends_with: string | null;
-}
-
-export interface FileSubscriptionPayload {
-  mutation: _ModelMutationType;
-  node: File | null;
-  updatedFields: Array<string>;
-  previousValues: FilePreviousValues | null;
-}
-
-export interface FilePreviousValues {
-  contentType: string;
-  createdAt: DateTime;
-  id: string;
-  name: string;
-  secret: string;
-  size: number;
-  updatedAt: DateTime;
-  url: string;
-}
-
-export interface MemberSubscriptionFilter {
-  AND: Array<MemberSubscriptionFilter>;
-  OR: Array<MemberSubscriptionFilter>;
-  mutation_in: Array<_ModelMutationType>;
-  updatedFields_contains: string | null;
-  updatedFields_contains_every: Array<string>;
-  updatedFields_contains_some: Array<string>;
-  node: MemberSubscriptionFilterNode | null;
-}
-
-export interface MemberSubscriptionFilterNode {
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  name: string | null;
-  name_not: string | null;
-  name_in: Array<string>;
-  name_not_in: Array<string>;
-  name_lt: string | null;
-  name_lte: string | null;
-  name_gt: string | null;
-  name_gte: string | null;
-  name_contains: string | null;
-  name_not_contains: string | null;
-  name_starts_with: string | null;
-  name_not_starts_with: string | null;
-  name_ends_with: string | null;
-  name_not_ends_with: string | null;
-  title: string | null;
-  title_not: string | null;
-  title_in: Array<string>;
-  title_not_in: Array<string>;
-  title_lt: string | null;
-  title_lte: string | null;
-  title_gt: string | null;
-  title_gte: string | null;
-  title_contains: string | null;
-  title_not_contains: string | null;
-  title_starts_with: string | null;
-  title_not_starts_with: string | null;
-  title_ends_with: string | null;
-  title_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  chats_every: ChatFilter | null;
-  chats_some: ChatFilter | null;
-  chats_none: ChatFilter | null;
-  messages_every: MessageFilter | null;
-  messages_some: MessageFilter | null;
-  messages_none: MessageFilter | null;
-}
-
-export interface MemberSubscriptionPayload {
-  mutation: _ModelMutationType;
-  node: Member | null;
-  updatedFields: Array<string>;
-  previousValues: MemberPreviousValues | null;
-}
-
-export interface MemberPreviousValues {
-  createdAt: DateTime;
-  id: string;
-  name: string;
-  title: string | null;
-  updatedAt: DateTime;
-}
-
-export interface MessageSubscriptionFilter {
-  AND: Array<MessageSubscriptionFilter>;
-  OR: Array<MessageSubscriptionFilter>;
-  mutation_in: Array<_ModelMutationType>;
-  updatedFields_contains: string | null;
-  updatedFields_contains_every: Array<string>;
-  updatedFields_contains_some: Array<string>;
-  node: MessageSubscriptionFilterNode | null;
-}
-
-export interface MessageSubscriptionFilterNode {
-  content: string | null;
-  content_not: string | null;
-  content_in: Array<string>;
-  content_not_in: Array<string>;
-  content_lt: string | null;
-  content_lte: string | null;
-  content_gt: string | null;
-  content_gte: string | null;
-  content_contains: string | null;
-  content_not_contains: string | null;
-  content_starts_with: string | null;
-  content_not_starts_with: string | null;
-  content_ends_with: string | null;
-  content_not_ends_with: string | null;
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-  author: MemberFilter | null;
-  chat: ChatFilter | null;
-}
-
-export interface MessageSubscriptionPayload {
-  mutation: _ModelMutationType;
-  node: Message | null;
-  updatedFields: Array<string>;
-  previousValues: MessagePreviousValues | null;
-}
-
-export interface MessagePreviousValues {
-  content: string;
-  createdAt: DateTime;
-  id: string;
-  updatedAt: DateTime;
-}
-
-export interface UserSubscriptionFilter {
-  AND: Array<UserSubscriptionFilter>;
-  OR: Array<UserSubscriptionFilter>;
-  mutation_in: Array<_ModelMutationType>;
-  updatedFields_contains: string | null;
-  updatedFields_contains_every: Array<string>;
-  updatedFields_contains_some: Array<string>;
-  node: UserSubscriptionFilterNode | null;
-}
-
-export interface UserSubscriptionFilterNode {
-  createdAt: DateTime | null;
-  createdAt_not: DateTime | null;
-  createdAt_in: Array<DateTime>;
-  createdAt_not_in: Array<DateTime>;
-  createdAt_lt: DateTime | null;
-  createdAt_lte: DateTime | null;
-  createdAt_gt: DateTime | null;
-  createdAt_gte: DateTime | null;
-  id: string | null;
-  id_not: string | null;
-  id_in: Array<string>;
-  id_not_in: Array<string>;
-  id_lt: string | null;
-  id_lte: string | null;
-  id_gt: string | null;
-  id_gte: string | null;
-  id_contains: string | null;
-  id_not_contains: string | null;
-  id_starts_with: string | null;
-  id_not_starts_with: string | null;
-  id_ends_with: string | null;
-  id_not_ends_with: string | null;
-  updatedAt: DateTime | null;
-  updatedAt_not: DateTime | null;
-  updatedAt_in: Array<DateTime>;
-  updatedAt_not_in: Array<DateTime>;
-  updatedAt_lt: DateTime | null;
-  updatedAt_lte: DateTime | null;
-  updatedAt_gt: DateTime | null;
-  updatedAt_gte: DateTime | null;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: _ModelMutationType;
-  node: User | null;
-  updatedFields: Array<string>;
-  previousValues: UserPreviousValues | null;
-}
-
-export interface UserPreviousValues {
-  createdAt: DateTime;
-  id: string;
-  updatedAt: DateTime;
-}
-
-export type BigDecimal = any;
-
-export type BigInt = any;
-
-export type Long = any;
-
-export namespace GetAllChatsQuery {
+export namespace GetAllChats {
   export type Variables = {
-      member: string;
+    member: string;
   }
 
-  export type Result = {
-    allChats: Array<AllChats>;
+  export type Query = {
+    allChats: AllChats[]; 
   } 
 
   export type AllChats = {
-    members: Array<Members>;
-    id: string;
-    date: DateTime;
-    messages: Array<Messages>;
+    members: Members[]; 
+    id: string; 
+    date: DateTime; 
+    messages: Messages[]; 
   } 
 
   export type Members = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 
   export type Messages = {
-    content: string;
-    author: Author;
+    content: string; 
+    author?: Author; 
   } 
 
   export type Author = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace GetAllMembersQuery {
+export namespace GetAllMembers {
   export type Variables = {
-      member: string;
+    member: string;
   }
 
-  export type Result = {
-    allMembers: Array<AllMembers>;
+  export type Query = {
+    allMembers: AllMembers[]; 
   } 
 
   export type AllMembers = {
-    id: string;
-    name: string;
-    title: string;
-    chats: Array<Chats>;
+    id: string; 
+    name: string; 
+    title?: string; 
+    chats: Chats[]; 
   } 
 
   export type Chats = {
-    id: string;
+    id: string; 
   } 
 }
-
-export namespace GetChatMembersQuery {
+export namespace GetChatMembers {
   export type Variables = {
-      chat: string;
-      member: string;
+    chat: string;
+    member: string;
   }
 
-  export type Result = {
-    Chat: Chat;
+  export type Query = {
+    Chat?: Chat; 
   } 
 
   export type Chat = {
-    members: Array<Members>;
+    members: Members[]; 
   } 
 
   export type Members = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace GetChatMessagesQuery {
+export namespace GetChatMessages {
   export type Variables = {
-      chat: string;
+    chat: string;
   }
 
-  export type Result = {
-    allMessages: Array<AllMessages>;
+  export type Query = {
+    allMessages: AllMessages[]; 
   } 
 
   export type AllMessages = {
-    id: string;
-    content: string;
-    author: Author;
+    id: string; 
+    content: string; 
+    author?: Author; 
   } 
 
   export type Author = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace GetDeletedChatSubscription {
+export namespace GetDeletedChat {
   export type Variables = {
-      member: string;
+    member: string;
   }
 
-  export type Result = {
-    Chat: Chat;
+  export type Subscription = {
+    Chat?: Chat; 
   } 
 
   export type Chat = {
-    previousValues: PreviousValues;
+    previousValues?: PreviousValues; 
   } 
 
   export type PreviousValues = {
-    id: string;
+    id: string; 
   } 
 }
-
-export namespace GetMemberQuery {
+export namespace GetMember {
   export type Variables = {
-      name: string;
+    name: string;
   }
 
-  export type Result = {
-    allMembers: Array<AllMembers>;
+  export type Query = {
+    allMembers: AllMembers[]; 
   } 
 
   export type AllMembers = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace GetNewChatMessageSubscription {
+export namespace GetNewChatMessage {
   export type Variables = {
-      chats: Array<string>;
+    chats: string[];
   }
 
-  export type Result = {
-    Message: Message;
+  export type Subscription = {
+    Message?: Message; 
   } 
 
   export type Message = {
-    node: Node;
+    node?: Node; 
   } 
 
   export type Node = {
-    id: string;
-    content: string;
-    chat: Chat;
+    id: string; 
+    content: string; 
+    chat?: Chat; 
   } 
 
   export type Chat = {
-    id: string;
-    date: DateTime;
+    id: string; 
+    date: DateTime; 
   } 
 }
-
-export namespace GetNewChatSubscription {
+export namespace GetNewChat {
   export type Variables = {
-      member: string;
+    member: string;
   }
 
-  export type Result = {
-    Chat: Chat;
+  export type Subscription = {
+    Chat?: Chat; 
   } 
 
   export type Chat = {
-    node: Node;
+    node?: Node; 
   } 
 
   export type Node = {
-    id: string;
-    date: DateTime;
-    members: Array<Members>;
+    id: string; 
+    date: DateTime; 
+    members: Members[]; 
   } 
 
   export type Members = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace GetNewMessageSubscription {
+export namespace GetNewMessage {
   export type Variables = {
-      chat: string;
+    chat: string;
   }
 
-  export type Result = {
-    Message: Message;
+  export type Subscription = {
+    Message?: Message; 
   } 
 
   export type Message = {
-    node: Node;
+    node?: Node; 
   } 
 
   export type Node = {
-    id: string;
-    content: string;
-    author: Author;
+    id: string; 
+    content: string; 
+    author?: Author; 
   } 
 
   export type Author = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace RemoveChatMutation {
+export namespace RemoveChat {
   export type Variables = {
-      chat: string;
+    chat: string;
   }
 
-  export type Result = {
-    deleteChat: DeleteChat;
+  export type Mutation = {
+    deleteChat?: DeleteChat; 
   } 
 
   export type DeleteChat = {
-    id: string;
+    id: string; 
   } 
 }
-
-export namespace SendMessageMutation {
+export namespace SendMessage {
   export type Variables = {
-      author: string;
-      chat: string;
-      content: string;
+    author: string;
+    chat: string;
+    content: string;
   }
 
-  export type Result = {
-    createMessage: CreateMessage;
+  export type Mutation = {
+    createMessage?: CreateMessage; 
   } 
 
   export type CreateMessage = {
-    id: string;
-    content: string;
-    author: Author;
+    id: string; 
+    content: string; 
+    author?: Author; 
   } 
 
   export type Author = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }
-
-export namespace StartChatMutation {
+export namespace StartChat {
   export type Variables = {
-      members: Array<string>;
-      author: string;
+    members: string[];
+    author: string;
   }
 
-  export type Result = {
-    createChat: CreateChat;
+  export type Mutation = {
+    createChat?: CreateChat; 
   } 
 
   export type CreateChat = {
-    id: string;
-    date: DateTime;
-    messages: Array<Messages>;
-    members: Array<Members>;
+    id: string; 
+    date: DateTime; 
+    messages: Messages[]; 
+    members: Members[]; 
   } 
 
   export type Messages = {
-    content: string;
-    author: Author;
+    content: string; 
+    author?: Author; 
   } 
 
   export type Author = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 
   export type Members = {
-    id: string;
-    name: string;
+    id: string; 
+    name: string; 
   } 
 }

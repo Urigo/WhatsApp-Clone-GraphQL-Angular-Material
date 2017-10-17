@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export interface Contact {
   id: string;
   name: string;
-  title: string;
+  title?: string;
   platform?: string;
 }
 
