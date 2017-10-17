@@ -6,7 +6,9 @@
 export const environment = {
   production: false,
   apollo: {
-    http: 'https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny',
-    subscriptions: 'wss://subscriptions.graph.cool/v1/cj0i77728mu2c0122es3qepny'
+    // http: 'https://api.graph.cool/simple/v1/cj0i77728mu2c0122es3qepny',
+    // subscriptions: 'wss://subscriptions.graph.cool/v1/cj0i77728mu2c0122es3qepny'
+    http: 'http://localhost:3000/graphql',
+    subscriptions: 'ws://localhost:3100'
   }
 };

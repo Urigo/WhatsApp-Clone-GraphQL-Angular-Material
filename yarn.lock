@@ -174,13 +174,13 @@
   dependencies:
     tslib "^1.7.1"
 
-"@kamilkisiela/apollo-angular-link-http@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@kamilkisiela/apollo-angular-link-http/-/apollo-angular-link-http-0.0.4.tgz#407c6a7157b13afbb75eeb095a002b30b7f5dcf5"
+"@kamilkisiela/apollo-angular-link-http@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@kamilkisiela/apollo-angular-link-http/-/apollo-angular-link-http-0.1.0.tgz#9ff57726a691545962368a574957b6f7b8cef7d6"
 
-"@kamilkisiela/apollo-angular@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@kamilkisiela/apollo-angular/-/apollo-angular-1.1.0.tgz#1383f97d72ecbcbb838831b2427b7a33aab91d3c"
+"@kamilkisiela/apollo-angular@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@kamilkisiela/apollo-angular/-/apollo-angular-1.2.0.tgz#077d641dd53dd998021f8575ab65751573bb269a"
 
 "@ngtools/json-schema@1.1.0", "@ngtools/json-schema@^1.1.0":
   version "1.1.0"

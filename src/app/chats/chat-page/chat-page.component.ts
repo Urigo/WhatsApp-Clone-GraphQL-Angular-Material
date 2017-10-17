@@ -100,6 +100,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
                 return;
               }
 
+              console.log('SUB', data.Message.node);
+              console.log('has', prev.allMessages.length);
               return this.pushMessage(prev, data.Message.node);
             }
           );
@@ -144,6 +146,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         // BUG: readQuery returns the result instead of {result, complete}
         // apollographql/apollo-client#2308
         const data: any = proxy.readQuery<GetChatMessages.Query>(options);
+
+        console.log('Mutation', result.data.createMessage);
+        console.log('has', data.allMessages.length);
 
         // write
         proxy.writeQuery({
@@ -208,15 +213,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       return { allMessages: [message] };
     }
 
-    if (prev.allMessages.some(m => m.id === message.id)) {
+    const prevMessages = prev.allMessages.filter(m => m.id);
+
+    if (prevMessages.some(m => m.id === message.id)) {
       return prev;
     }
 
-    return update(prev, {
-      allMessages: {
-        $push: [message]
-      }
-    });
+    return {
+      ...prev,
+      allMessages: [...prevMessages, message]
+    };
   }
 
   ngOnDestroy() {
