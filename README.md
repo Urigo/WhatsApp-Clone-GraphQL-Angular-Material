@@ -12,7 +12,7 @@ WhatsApp clone built with Angular and GraphQL
 
 - [ApolloGraphQL](http://dev.apollodata.com) communicates with the backend
 - [graph.cool](http://graph.cool) as a backend
-- [GraphQL Code Generator](https://github.com/dotansimha/graphql-code-generator) to have GraphQL Documents desribed in TypeScript
+- [GraphQL Code Generator](https://github.com/dotansimha/graphql-code-generator) to have GraphQL Documents described in TypeScript
 - [graphql-config](https://github.com/graphcool/graphql-config) gives GraphQL support for your editor
 
 ### Easiest way to start
